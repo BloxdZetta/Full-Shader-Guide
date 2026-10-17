@@ -31,6 +31,7 @@ de dissections de packs publiés et d'une chaîne de validation locale — pas a
 | VII | [07-internes](07-internes.md) | internals moteur avec étiquettes de provenance |
 | VIII | [08-ids-blocs](08-ids-blocs.md) | la table numérique des ids de blocs |
 | IX | [09-sources](09-sources.md) | comment on sait tout ça — instruments, politique de provenance, questions ouvertes |
+| X | [10-constantes](10-constantes.md) | chaque constante de ce dépôt et des packs disséqués — **423**, générées depuis les sources, chacune avec son rôle |
 
 ## Langues
 

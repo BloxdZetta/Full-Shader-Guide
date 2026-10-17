@@ -32,6 +32,7 @@ community packs, and a local validation toolchain — not from guesswork.
 | VII | [07-internals](en/07-internals.md) | engine internals with provenance labels |
 | VIII | [08-block-ids](en/08-block-ids.md) | the numeric block-id table (unique asset) |
 | IX | [09-sources](en/09-sources.md) | how we know all this — instruments, provenance policy, open questions |
+| X | [10-constants](en/10-constants.md) | every constant in this repo & the dissected packs — **423**, generated from source, each with its role |
 
 ## Languages
 

@@ -12,26 +12,26 @@ in all 8 engine variants.
 
 | You are… | Start with |
 |---|---|
-| **New to shaders** (or to code) | ⭐ [Part 0 — Start from zero](en/00-start.md) — how rendering works, what a shader is, your first pack in 5 steps |
-| **A coder** who wants the contract | [Part II — The API contract](en/02-api.md), then [Part III — Recipes](en/03-recipes.md) |
-| **Looking up one number** | [Part VIII — Block ids](en/08-block-ids.md) · [Part X — Constants](en/10-constants.md) · [Part IV — Measured numbers](en/04-realism.md) |
-| **Debugging a broken pack** | [Part V — Troubleshooting](en/05-troubleshooting.md) |
+| **New to shaders** (or to code) | ⭐ [Part 0 — Start from zero](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) — how rendering works, what a shader is, your first pack in 5 steps |
+| **A coder** who wants the contract | [Part II — The API contract](GUIDE-EN.md#part-ii--the-api-contract), then [Part III — Recipes](GUIDE-EN.md#part-iii--recipes) |
+| **Looking up one number** | [Part VIII — Block ids](GUIDE-EN.md#part-viii--the-numeric-block-id-table) · [Part X — Constants](GUIDE-EN.md#part-x--the-constants-register-en) · [Part IV — Measured numbers](GUIDE-EN.md#part-iv--measured-numbers-realism-that-survives-contact-with-the-game) |
+| **Debugging a broken pack** | [Part V — Troubleshooting](GUIDE-EN.md#part-v--troubleshooting) |
 
 ## 📚 The guide (English, deep version)
 
 | Part | File | Content |
 |---|---|---|
-| 0 | [00-start](en/00-start.md) | **start from zero**: web rendering, the GPU pipeline, what a shader is, everything possible/impossible, first pack |
-| I | [01-making](en/01-making.md) | pack format, minimal pack, multi-file loading, caps, distribution |
-| II | [02-api](en/02-api.md) | complete hook & struct contract, engine functions, hard rules |
-| III | [03-recipes](en/03-recipes.md) | 12 production recipes with WGSL snippets |
-| IV | [04-realism](en/04-realism.md) | measured numbers: light units, fog, water optics, tone curves |
-| V | [05-troubleshooting](en/05-troubleshooting.md) | every known failure mode and its fix |
-| VI | [06-implementation](en/06-implementation.md) | local validation pipeline (8 variants) & packaging QA |
-| VII | [07-internals](en/07-internals.md) | engine internals: time, light pipeline, sky, loader |
-| VIII | [08-block-ids](en/08-block-ids.md) | the full numeric block-id table (0 → 3254+) |
-| IX | [09-sources](en/09-sources.md) | how every fact was established — instruments, provenance, open questions |
-| X | [10-constants](en/10-constants.md) | every constant (551), generated from source, each with its role |
+| 0 | [00-start](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) | **start from zero**: web rendering, the GPU pipeline, what a shader is, everything possible/impossible, first pack |
+| I | [01-making](GUIDE-EN.md#part-i--making-a-pack) | pack format, minimal pack, multi-file loading, caps, distribution |
+| II | [02-api](GUIDE-EN.md#part-ii--the-api-contract) | complete hook & struct contract, engine functions, hard rules |
+| III | [03-recipes](GUIDE-EN.md#part-iii--recipes) | 12 production recipes with WGSL snippets |
+| IV | [04-realism](GUIDE-EN.md#part-iv--measured-numbers-realism-that-survives-contact-with-the-game) | measured numbers: light units, fog, water optics, tone curves |
+| V | [05-troubleshooting](GUIDE-EN.md#part-v--troubleshooting) | every known failure mode and its fix |
+| VI | [06-implementation](GUIDE-EN.md#part-vi--implementation--local-validation) | local validation pipeline (8 variants) & packaging QA |
+| VII | [07-internals](GUIDE-EN.md#part-vii--engine-internals) | engine internals: time, light pipeline, sky, loader |
+| VIII | [08-block-ids](GUIDE-EN.md#part-viii--the-numeric-block-id-table) | the full numeric block-id table (0 → 3254+) |
+| IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | how every fact was established — instruments, provenance, open questions |
+| X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | every constant (551), generated from source, each with its role |
 
 ## 🌍 Languages
 
@@ -42,23 +42,23 @@ first pack, rules, glossary) translated in full, with links into the deep chapte
 | Language | Guide |
 |---|---|
 | English | ✅ full deep guide (this page) |
-| Français | ✅ [guide complet, 11 parties](fr/README.md) |
-| Deutsch | [Kompletter Leitfaden](de/README.md) |
-| Español | [Guía completa](es/README.md) |
-| Português | [Guia completo](pt/README.md) |
-| Italiano | [Guida completa](it/README.md) |
-| Nederlands | [Volledige gids](nl/README.md) |
-| Polski | [Kompletny przewodnik](pl/README.md) |
-| Türkçe | [Eksiksiz kılavuz](tr/README.md) |
-| Русский | [Полное руководство](ru/README.md) |
-| Українська | [Повний посібник](uk/README.md) |
-| العربية | [الدليل الكامل](ar/README.md) |
-| हिन्दी | [पूर्ण मार्गदर्शिका](hi/README.md) |
-| Bahasa Indonesia | [Panduan lengkap](id/README.md) |
-| Tiếng Việt | [Hướng dẫn đầy đủ](vi/README.md) |
-| 日本語 | [完全ガイド](ja/README.md) |
-| 한국어 | [완전 가이드](ko/README.md) |
-| 简体中文 | [完整指南](zh-CN/README.md) |
+| Français | ✅ [guide complet, 11 parties](GUIDE-FR.md) |
+| Deutsch | [Kompletter Leitfaden](GUIDE-DE.md) |
+| Español | [Guía completa](GUIDE-ES.md) |
+| Português | [Guia completo](GUIDE-PT.md) |
+| Italiano | [Guida completa](GUIDE-IT.md) |
+| Nederlands | [Volledige gids](GUIDE-NL.md) |
+| Polski | [Kompletny przewodnik](GUIDE-PL.md) |
+| Türkçe | [Eksiksiz kılavuz](GUIDE-TR.md) |
+| Русский | [Полное руководство](GUIDE-RU.md) |
+| Українська | [Повний посібник](GUIDE-UK.md) |
+| العربية | [الدليل الكامل](GUIDE-AR.md) |
+| हिन्दी | [पूर्ण मार्गदर्शिका](GUIDE-HI.md) |
+| Bahasa Indonesia | [Panduan lengkap](GUIDE-ID.md) |
+| Tiếng Việt | [Hướng dẫn đầy đủ](GUIDE-VI.md) |
+| 日本語 | [完全ガイド](GUIDE-JA.md) |
+| 한국어 | [완전 가이드](GUIDE-KO.md) |
+| 简体中文 | [完整指南](GUIDE-ZH-CN.md) |
 
 ## Why this guide is different
 

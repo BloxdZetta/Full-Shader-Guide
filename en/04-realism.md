@@ -42,7 +42,7 @@ pack · **[3rd-party]** restored from production JS by the community, sanity-che
 
 ## Water optics (shipped-pack proven values)
 
-- Beer–Lambert depth darkening `1 − exp(−0.32·d)` (≈⅓ at 1 block) **[shipped]**; our own P0
+- Beer–Lambert depth darkening `1 − exp(−0.32·d)` (≈⅓ at 1 block) **[shipped]**; the local P0
   plan used 0.45/0.08/0.03 (r/g/b) — both work, the single-scalar is friendlier.
 - Schlick Fresnel with F0 = 0.02; broad sheen `0.05·pow(nDotH, 24)·sunUp` **[shipped]**.
 - Registered water colour (0.5, 0.5, 0.8) / alpha 0.9 — rebuild alpha from it, don’t hardcode.

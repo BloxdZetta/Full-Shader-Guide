@@ -15,7 +15,8 @@ fn isLeaf(id: u32) -> bool {
 ```
 
 Id groups live in Part VIII. In the light hook use `light.blockId`; in the surface hook use
-`bloxdFaceBlock(surface.position, surface.normal)`.
+`surface.blockId` — `bloxdFaceBlock(surface.position, surface.normal)` gives the block's cell
+coordinates, the input per-block hashes want.
 
 ## R2 — Canopy shadow (the trick behind “soft tree shadows”)
 

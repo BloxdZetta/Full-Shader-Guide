@@ -1,7 +1,7 @@
 # Part II — The API contract
 
-Everything below is either proven in a shipped pack (label **[shipped]**) or exercised by our
-own validated packs (**[ours]**). If it is not in this file, treat it as unknown until proven.
+Everything below is either proven in a shipped pack (label **[shipped]**) or exercised by
+locally validated packs (**[local]**). If it is not in this file, treat it as unknown until proven.
 
 ## The four hooks
 
@@ -55,7 +55,7 @@ Reading the fields:
 | `bloxdTime()` / `bloxdTimeWrap` | seconds, wraps at `bloxdTimeWrap` (3600). Animate with **whole cycles**: `sin(TAU * fract(bloxdTime() / bloxdTimeWrap * cycles + phase))` |
 | `bloxdEyePosition()` | camera position, for distance/LOD and view vectors |
 | `bloxdOriginOffset()` | floating-origin rebase offset; **add it into any world-space hash** or patterns jump when the engine rebases (it does) |
-| `bloxdFaceBlock(position, normal)` | the block id of the face you are on — for surface-hook per-block work **[shipped]** |
+| `bloxdFaceBlock(position, normal)` | the **cell** (block coordinates) of the face you are on — per-block hash input; the id itself is `surface.blockId` / `light.blockId` **[shipped]** |
 | `bloxdOpaqueBehind()` | `{found, position}` of the first opaque block behind a liquid fragment — vertical water depth, refraction approximations **[shipped]** |
 
 ## Hard rules (violating any = broken or rejected pack)

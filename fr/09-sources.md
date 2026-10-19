@@ -7,7 +7,7 @@ derrière les étiquettes — parce qu'un guide qui dit *comment il sait* vaut d
 
 | Étiquette | Signification | Politique de confiance |
 |---|---|---|
-| **[mesuré]** | produit par nos instruments : packs sondes écrivant les grandeurs moteur dans les canaux couleur, pipelines de captures à caméra/monde fixés, fits de courbes sur frames réelles | confiance dans l'enveloppe mesurée |
+| **[mesuré]** | produit par des instruments locaux : packs sondes écrivant les grandeurs moteur dans les canaux couleur, pipelines de captures à caméra/monde fixés, fits de courbes sur frames réelles | confiance dans l'enveloppe mesurée |
 | **[publié]** | prouvé par un pack communautaire publié tournant dans le jeu live (ex. Breeze v1, disséqué fichier par fichier) | confiance — le jeu lui-même l'a accepté |
 | **[tierce]** | restauré du JS de production par l'analyse communautaire (internals imu31465, dumps npm, wiki) | jamais porteur tant que non mesuré ; cité car il a guidé nos sondes |
 

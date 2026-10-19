@@ -1,6 +1,6 @@
 # Part VII — Engine internals
 
-Every item carries its provenance: **[measured]** our instruments · **[shipped]** proven by a
+Every item carries its provenance: **[measured]** local instruments · **[shipped]** proven by a
 released pack in-game · **[3rd-party]** restored from production JS by community analysis
 (sanity-check anything load-bearing).
 

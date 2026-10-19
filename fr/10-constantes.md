@@ -10,29 +10,148 @@ ciel ouvert = 15 ; courbe de tone ≈ **45·b/(1+2b)** [mesuré] ; bande d'ombre
 **3200-3328** ; ambient scène défaut **0.5** ; cap loader **256 Ko** ; 2 lampes directionnelles
 figées. Détails et provenances : [Partie IV](04-realisme.md) et Partie VII.
 
-## Registre de NOS constantes et de celles des packs disséqués
+## Registre des constantes (packs locaux et packs disséqués)
 
 Généré mécaniquement depuis les sources de ce dépôt (`guide/tools/gen_var_registry.py`) —
 valeur exacte du code, rôle par constante (individuel ou par famille), pack d'origine.
 
 
 
-## cinematic-v5 (nôtre — baseline gelée R16-R36) — 60 constants
+## cinematic-v5 (pack local — baseline gelée) — 183 constants
 
 | Constant | Value | Role |
 |---|---|---|
+| `TR_ALT_HAZE` | 0.15 | brume d'altitude : force du voile au-dessus de 55 blocs |
+| `TR_AURORA_WATER` | 0.08 | eau : force de l'aurore nocturne reflétée (dans notre reflet seulement) |
+| `TR_BACKLIGHT` | 0.18 | contre-jour : force de la lueur de la végétation dos au soleil |
+| `TR_BACKLIGHT_COL` | vec3f(1.0, 0.62, 0.28) | contre-jour : couleur chaude de la lueur |
+| `TR_BAT_CHANCE` | 0.12 | chauves-souris : proportion de cellules au crépuscule |
+| `TR_BAT_COL` | vec3f(0.10, 0.09, 0.08) | chauves-souris : couleur de la silhouette sombre |
+| `TR_BAT_ROAM` | 0.8 | chauves-souris : rayon d'errance saccadée |
+| `TR_BAT_SIZE` | 0.09 | chauves-souris : taille du corps |
+| `TR_BAT_T_WING` | 9.424778 | chauves-souris : vitesse de battement rapide (verrouillée au wrap) |
+| `TR_BFLY_BODY` | 0.012 | papillons : demi-largeur du corps |
+| `TR_BFLY_CHANCE` | 0.25 | papillons : proportion de cellules d'air occupées |
+| `TR_BFLY_COL1` | vec3f(0.95, 0.93, 0.85) | papillons : variante blanche |
+| `TR_BFLY_COL2` | vec3f(0.98, 0.85, 0.30) | papillons : variante jaune |
+| `TR_BFLY_COL3` | vec3f(0.90, 0.55, 0.25) | papillons : variante orange |
+| `TR_BFLY_GAP` | 0.035 | papillons : demi-séparation des deux ailes |
+| `TR_BFLY_ROAM` | 0.4 | papillons : rayon d'errance autour de la cellule |
+| `TR_BFLY_SIZE` | 0.05 | papillons : taille du corps |
+| `TR_BFLY_TALL` | 1.35 | papillons : ratio de hauteur du disque d'ailes |
+| `TR_BFLY_T_WING` | 3.1415927 | papillons : vitesse de battement des ailes (verrouillée au wrap) |
+| `TR_BUG_COL` | vec3f(0.72, 0.06, 0.05) | coccinelles : rouge de la carapace |
+| `TR_BUG_SHARE` | 0.12 | papillons : part qui sont des coccinelles |
+| `TR_CANOPY_HI` | 0.9995 | fenêtre effets d'arbres : skyLight du ciel ouvert (les plaines restent nues) |
+| `TR_CANOPY_LO` | 0.90 | fenêtre effets d'arbres : skyLight minimum (les grottes restent nues) |
+| `TR_CINEMA_BOOST` | 1.6 | mode cinéma : multiplicateur de brume dorée et contre-jour |
+| `TR_CINEMA_MODE` | false | mode cinéma : false = normal, true = atmosphère poussée |
 | `TR_EDGE_AO` | 0.92 | force de l'AO d'arête (pondérée skyLight, loi) |
+| `TR_EMBER_CHANCE` | 0.18 | lave : proportion de cellules émettant des braises |
+| `TR_EMBER_HEIGHT` | 2.2 | lave : hauteur de montée des braises (blocs) |
+| `TR_EMBER_SIZE` | 0.03 | lave : taille angulaire d'une braise à 1 bloc |
+| `TR_EMBER_T_RISE` | 4.0 | lave : période de montée des braises (doit diviser 3600) |
 | `TR_EPSILON` | 0.0001 | garde epsilon générique |
+| `TR_FLY_CHANCE` | 0.18 | lucioles : proportion de cellules d'air occupées |
+| `TR_FLY_COLOUR` | vec3f(1.0, 0.85, 0.45) | lucioles : couleur de la lueur |
+| `TR_FLY_SIZE` | 0.035 | lucioles : rayon du point lumineux |
+| `TR_FLY_W_BLINK` | 0.0698132 | lucioles : vitesse angulaire de clignotement (verrouillée au wrap) |
+| `TR_FLY_W_BOB` | 0.7853981 | lucioles : vitesse angulaire du flottement (verrouillée au wrap) |
+| `TR_GLASS_MIRROR` | 0.30 | verre : force du reflet du ciel (fresnel) |
+| `TR_GLASS_RIM` | 0.22 | verre : éclaircissement des bords aux angles rasants |
 | `TR_GOLDEN_GAIN` | 0.50 | gain heure dorée |
 | `TR_GOLDEN_TINT` | vec3f(1.06, 1.005, 0.90) | teinte heure dorée |
-| `TR_GRAIN` | 0.016 | quantité de grain (fondu par distance) |
+| `TR_GRAIN` | 0.0 | quantité de grain (fondu par distance) |
+| `TR_HZN_CLOUD_STR` | 0.45 | force du banc de nuages d'horizon |
+| `TR_LAMP_FLICKER` | 0.10 | vacillement lampes : profondeur de modulation (0 = off) |
+| `TR_LAMP_SOFT_AO` | 0.55 | adoucissement lampes : AO de bord conservée près des lampes |
+| `TR_LAMP_SOFT_GAIN` | 2.5 | adoucissement lampes : gain blockLight → facteur de lavage |
+| `TR_LAMP_SOFT_GRAIN` | 0.5 | adoucissement lampes : grain conservé près des lampes |
+| `TR_LAVA_FLOW_SCALE` | 0.55 | lave : échelle de la texture de flot visqueux (bien plus lente que l'eau) |
+| `TR_LEAF_AUTUMN` | 0.12 | feuilles tombantes : proportion de feuilles teintées automne |
+| `TR_LEAF_AUTUMN_GOLD` | vec3f(0.87, 0.60, 0.16) | feuilles tombantes : teinte dorée d'automne |
+| `TR_LEAF_AUTUMN_RUST` | vec3f(0.62, 0.28, 0.09) | feuilles tombantes : teinte rouille d'automne |
+| `TR_LEAF_BACKLIT` | 0.35 | feuilles tombantes : halo en contre-jour quand le soleil est derrière |
+| `TR_LEAF_CELL` | 3.0 | feuilles tombantes : taille des cellules d'air (une feuille max par cellule) |
+| `TR_LEAF_CHANCE` | 0.3 | feuilles tombantes : proportion de cellules occupées |
+| `TR_LEAF_DRIFT` | 0.06 | feuilles tombantes : dérive sous le vent (direction des nuages) |
+| `TR_LEAF_FADE_LO` | 5.0 | feuilles tombantes : distance de début de fondu |
+| `TR_LEAF_FALL` | 0.6 | feuilles tombantes : vitesse de chute (= WRAP*CELL/3600 exactement) |
+| `TR_LEAF_FLUTTER` | 0.15 | feuilles tombantes : amplitude du flottement vertical |
+| `TR_LEAF_GUST` | 0.5 | feuilles tombantes : surcroît de balancement pendant les rafales |
+| `TR_LEAF_LEN` | 1.7 | feuilles tombantes : rapport longueur/largeur de la feuille |
+| `TR_LEAF_LOD_SHRINK` | 0.45 | feuilles tombantes : rétrécissement au loin |
+| `TR_LEAF_ON` | true | interrupteur : feuilles tombantes |
+| `TR_LEAF_RANGE` | 10.0 | feuilles tombantes : distance de dessin depuis l'œil |
+| `TR_LEAF_RIM` | 0.22 | feuilles tombantes : force du rim-light au centre |
+| `TR_LEAF_SIZE` | 0.09 | feuilles tombantes : demi-largeur d'une feuille |
+| `TR_LEAF_SIZE_VAR` | 0.30 | feuilles tombantes : variation de taille par feuille (+/-) |
+| `TR_LEAF_STEPS` | 6 | feuilles tombantes : échantillons du march de rayon le long de la ligne de vue |
+| `TR_LEAF_TIP` | 0.55 | feuilles tombantes : force de la pointe effilée |
+| `TR_LEAF_TWOTONE` | 0.18 | feuilles tombantes : variation bicolore par feuille |
+| `TR_LEAF_WRAP` | 720 | feuilles tombantes : wrap en y des cellules pour une boucle 3600 s sans saut |
+| `TR_LEAF_W_FLIP` | 2.199115 | feuilles tombantes : vitesse angulaire de retournement (verrouillée au wrap) |
+| `TR_LEAF_W_GUST` | 0.1047197 | feuilles tombantes : vitesse angulaire du cycle de rafales (verrouillée au wrap) |
+| `TR_LEAF_W_SPIN` | 1.600467 | feuilles tombantes : vitesse angulaire de rotation (verrouillée au wrap) |
+| `TR_LEAF_W_SWAY_A` | 1.300270 | feuilles tombantes : vitesse angulaire de balancement x (verrouillée au wrap) |
+| `TR_LEAF_W_SWAY_B` | 0.900590 | feuilles tombantes : vitesse angulaire de balancement z (verrouillée au wrap) |
+| `TR_LITTER_DENS` | 0.82 | litière de feuilles : proportion de cellules laissées nues |
+| `TR_LITTER_MIX` | 0.22 | litière de feuilles : force du mélange au sol sous canopée |
+| `TR_LITTER_SCALE` | 3.0 | litière de feuilles : cellules de mouchetis par bloc |
+| `TR_MIST_GOLDEN` | 0.10 | perspective aérienne / brume |
+| `TR_MIST_GOLDEN_COL` | vec3f(0.93, 0.96, 1.0) | perspective aérienne / brume |
+| `TR_MIST_GROUND` | 0.12 | brume au sol : force à l'heure dorée |
+| `TR_MIST_GROUND_BAND` | 3.5 | brume au sol : bande de hauteur autour de l'œil (blocs) |
+| `TR_MIST_GROUND_COL` | vec3f(0.93, 0.96, 1.0) | brume au sol : couleur du voile |
+| `TR_MIST_GROUND_HI` | 90.0 | brume au sol : fin du fondu de distance (blocs) |
+| `TR_MIST_GROUND_LO` | 16.0 | brume au sol : début du fondu de distance (blocs) |
 | `TR_MOONLIGHT` | vec3f(0.30, 0.38, 0.55) | teinte clair de lune |
+| `TR_MOON_COLUMN` | 0.10 | eau : force de la colonne de clair de lune sur le fleuve |
 | `TR_MOON_GAIN` | 0.30 | gain clair de lune |
+| `TR_MOTE_CHANCE` | 0.2 | motes d'air : proportion de cellules occupées (spores de grottes / pollens du jour) |
+| `TR_MOTE_COL` | vec3f(0.55, 0.75, 1.0) | motes d'air : couleur des spores de grottes |
+| `TR_MOTE_SIZE` | 0.035 | motes d'air : taille angulaire à 1 bloc |
+| `TR_POLLEN_COL` | vec3f(1.0, 0.85, 0.45) | motes d'air : couleur des pollens dorés |
 | `TR_RELIEF_EPS` | 0.30 | pas epsilon du relief |
 | `TR_RELIEF_GAIN` | 1.6 | gain d'éclairage du relief |
 | `TR_RELIEF_HEIGHT` | 0.16 | amplitude du champ de hauteur |
 | `TR_RELIEF_SCALE` | 1.7 | échelle de hauteur du relief |
 | `TR_SCOTO` | 0.5 | force du mix scotopique (vision des bâtonnets) |
+| `TR_SKY2_BAND_A` | -0.22 | élévation solaire : nuit complète en dessous |
+| `TR_SKY2_BAND_B` | -0.04 | élévation solaire : le crépuscule commence ici |
+| `TR_SKY2_BAND_C` | 0.10 | élévation solaire : le jour commence ici |
+| `TR_SKY2_BAND_D` | 0.30 | élévation solaire : jour complet au-dessus |
+| `TR_SKY2_GLOW_DAWN` | vec3f(1.0, 0.70, 0.38) | couleur du halo solaire à l'aube |
+| `TR_SKY2_GLOW_DUSK` | vec3f(1.0, 0.50, 0.26) | couleur du halo solaire au crépuscule |
+| `TR_SKY2_GLOW_NIGHT` | vec3f(0.50, 0.62, 0.92) | couleur du halo de lune |
+| `TR_SKY2_NIGHT_LOW` | vec3f(0.07, 0.10, 0.20) | couleur d'horizon du ciel de nuit (bleu profond) |
+| `TR_SKY2_NIGHT_TOP` | vec3f(0.01, 0.02, 0.06) | couleur zénithale du ciel de nuit |
+| `TR_SKY2_TWI_LOW` | vec3f(0.98, 0.62, 0.42) | couleur d'horizon du ciel d'aube/crépuscule (pêche-or) |
+| `TR_SKY2_TWI_TOP` | vec3f(0.34, 0.34, 0.62) | couleur zénithale du ciel d'aube/crépuscule (mauve) |
+| `TR_SKYF_CURVE` | 1.6 | ciel-brouillard : pente de la courbe d'élévation (prouvée Blocky Day) |
+| `TR_SKYF_FOG_MIX` | 0.9 | ciel-brouillard : part de la couleur de brouillard moteur remplacée par le dégradé de ciel |
+| `TR_SKYF_GLOW` | 0.55 | ciel-brouillard : force du halo solaire (HORIZON_GLOW de Blocky Day) |
+| `TR_SKYF_GLOW_COL` | vec3f(1.00, 0.78, 0.50) | ciel-brouillard : couleur du halo solaire dans le faux ciel |
+| `TR_SKYF_HAZE_DESAT` | 0.10 | désaturation grise de la brume aérienne (plus bas = ciel plus bleu) |
+| `TR_SKYF_HORIZON_MIX` | 0.85 | ciel-brouillard : fusion de la brume d'horizon dans le faux ciel |
+| `TR_SKYF_LOW` | vec3f(0.70, 0.80, 0.96) | ciel-brouillard : couleur d'horizon du faux ciel (prouvée Blocky Day) |
+| `TR_SKYF_TOP` | vec3f(0.25, 0.45, 0.85) | ciel-brouillard : couleur zénithale du faux ciel (prouvée Blocky Day) |
+| `TR_SOFTEN_AMOUNT` | 0.0 | force du lissage du speckle des faces (anti-séparations) |
+| `TR_SOFTEN_GRAIN_NEAR` | 14.0 | distance d'arrêt de la couche de grain fin |
+| `TR_SOFTEN_LEVEL` | 0.5 | luminance cible des faces lissées |
+| `TR_SOFTEN_MIST` | 0.0 | force des taches nuageuses douces sur les faces |
+| `TR_SOFTEN_MIST_FAR` | 48.0 | distance de disparition des taches |
+| `TR_SOFTEN_MIST_SIZE` | 5.0 | fréquence des taches par bloc |
+| `TR_SPLASH_BRIGHT` | 1.6 | lave : éclat des gouttes |
+| `TR_SPLASH_CHANCE` | 0.35 | lave : proportion de cellules avec source d'éclaboussure active |
+| `TR_SPLASH_COL` | vec3f(1.0, 0.55, 0.15) | lave : couleur des gouttes |
+| `TR_SPLASH_HEIGHT` | 0.45 | lave : hauteur d'apogée des gouttes |
+| `TR_SPLASH_SIZE` | 0.045 | lave : taille angulaire d'une goutte à 1 bloc |
+| `TR_SPLASH_TRAIL` | 0.05 | lave : espacement de la traînée derrière la goutte (fraction de cycle) |
+| `TR_SPLASH_T_RISE` | 3.0 | lave : période montée-descente (doit diviser 3600) |
+| `TR_SWAY_FLOWER_HI` | 163u | fin de la plage d'ids des fleurs (gate de sway) |
+| `TR_SWAY_FLOWER_LO` | 151u | début de la plage d'ids des fleurs (gate de sway) |
+| `TR_SWAY_VINE_W` | 0.5 | poids de sway des vignes (id 219) |
 | `TR_VIBRANCE` | 0.16 | grade pré-fog (lift + vibrance à garde chroma) |
 | `TR_WATER_CLARITY` | 0.82 | clarté de l'eau |
 | `TR_WATER_DAY_TINT` | vec3f(0.34, 0.78, 0.82) | teinte d'eau, bande jour |
@@ -52,6 +171,9 @@ valeur exacte du code, rôle par constante (individuel ou par famille), pack d'o
 | `TR_WAVE_OMEGA_D` | 1.605703 | fréquence angulaire bande D (gel R17) |
 | `TR_WAVE_OMEGA_E` | 1.982694 | fréquence angulaire bande E (gel R17) |
 | `TR_WAVE_OMEGA_F` | 2.415536 | fréquence angulaire bande F (gel R17) |
+| `TR_WAVE_SWELL_AMP` | 0.15 | eau : amplitude de la houle longue dans la normale |
+| `TR_WAVE_SWELL_FOAM` | 0.20 | eau : force de l'écume sur les crêtes de houle |
+| `TR_WAVE_SWELL_SCALE` | 0.10 | eau : fréquence spatiale de la houle (radians par bloc) |
 | `bloom_spill` | 0.5 | quantité de diffusion bloom |
 | `cloud_height` | 100.0 | altitude de la couche nuages cv5 |
 | `cloud_scale` | 0.006 | échelle du bruit nuages cv5 |
@@ -63,7 +185,7 @@ valeur exacte du code, rôle par constante (individuel ou par famille), pack d'o
 | `haze_base_height` | 40.0 | altitude de référence du brouillard |
 | `haze_density` | 0.006 | densité du brouillard de hauteur |
 | `haze_height_falloff` | 0.012 | décroissance du brouillard avec l'altitude |
-| `haze_strength` | 0.4 | force du brouillard de hauteur |
+| `haze_strength` | 0.48 | force du brouillard de hauteur |
 | `hot_glow_strength` | 0.2 | lueur des émetteurs chauds |
 | `leaf_glow` | 0.6 | lueur de translucence des feuilles |
 | `luma` | vec3f(0.299, 0.587, 0.114) | poids de luminance Rec.709 |
@@ -80,9 +202,10 @@ valeur exacte du code, rôle par constante (individuel ou par famille), pack d'o
 | `sway_mode` | 2 | sélecteur d'implémentation du sway ; 2 = couleur seule (partout) |
 | `sway_speed` | 1.0 | multiplicateur de temps du sway |
 | `tall_grass_id` | 1109u | l'id de la plante Tall Grass (même gate) |
+| `tall_grass_top_id` | 1110u | id du bloc moitié haute de Tall Grass (gate de sway) |
 | `underwater_strength` | 0.30 | force de l'étalonnage sous-marin |
 
-## titan-bsl-ultra-v2 (nôtre — vitrine ciel/nuages/eau) — 288 constants
+## titan-bsl-ultra-v2 (pack local — vitrine ciel/nuages/eau) — 288 constants
 
 | Constant | Value | Role |
 |---|---|---|
@@ -102,7 +225,7 @@ valeur exacte du code, rôle par constante (individuel ou par famille), pack d'o
 | `TR_AURORA_GAIN` | 0.34 | traits du ciel nocturne (étoiles/voie lactée/aurores/météores) |
 | `TR_AURORA_HIGH` | 0.62 | traits du ciel nocturne (étoiles/voie lactée/aurores/météores) |
 | `TR_AURORA_LOW` | 0.06 | traits du ciel nocturne (étoiles/voie lactée/aurores/météores) |
-| `TR_BACKLIGHT` | 0.30 | contre-jour sur le feuillage |
+| `TR_BACKLIGHT` | 0.30 | contre-jour : force de la lueur de la végétation dos au soleil |
 | `TR_BLOCK_AMBIENT` | 0.55 | réponse ambiante & rugosité à la lumière de bloc |
 | `TR_BLOCK_ROUGH_SPREAD` | 0.06 | réponse ambiante & rugosité à la lumière de bloc |
 | `TR_BLOCK_VARIATION` | 0.018 | variation de luminosité par bloc / cellule |
@@ -375,12 +498,17 @@ valeur exacte du code, rôle par constante (individuel ou par famille), pack d'o
 | `TR_WIND_FIELD_SPEED` | 0.551111 | champ de vent pour le feuillage |
 | `TR_WIND_SPEED_STEP` | 0.013889 | réglages maîtres du vent |
 
-## PROBE-DIAG-v1 (nôtre — sonde de mesure, jamais publiée) — 14 constants
+## PROBE-DIAG-v2 (sonde de mesure, modes 0-15) — 19 constants
 
 | Constant | Value | Role |
 |---|---|---|
 | `MODE_0_SKYLIGHT_RAW` | 0 | sonde mode 0 — skyLight brut sur tous les canaux |
 | `MODE_10_DIRECTIONAL_GRAY` | 10 | sonde mode 10 — lumière directionnelle terrain en gris |
+| `MODE_11_DEPTH_DEFINE` | 11 | sonde mode 11 — BLOXD_SCENE_DEPTH actif ? (vert/rouge) |
+| `MODE_12_DEPTH_FOUND` | 12 | sonde mode 12 — behind.found (vert/rouge) |
+| `MODE_13_DEPTH_PATH_BANDS` | 13 | sonde mode 13 — bandes d'épaisseur d'eau (path) |
+| `MODE_14_DEPTH_VERTICAL_BANDS` | 14 | sonde mode 14 — bandes de profondeur verticale |
+| `MODE_15_DEPTH_BED_ANCHOR` | 15 | sonde mode 15 — ancrage au lit (fract bed.y) |
 | `MODE_1_SKY_LEVEL_0_15` | 1 | sonde mode 1 — skyLight remis à l'échelle 0-15 |
 | `MODE_2_BLOCKLIGHT_RGB` | 2 | sonde mode 2 — blockLight RGB en couleur |
 | `MODE_3_HELDLIGHT_RGB_X4` | 3 | sonde mode 3 — heldLight ×4 (visibilité) |

@@ -1,44 +1,52 @@
-# Bloxd Shader Packs — Le Guide d'Ingénierie (FR)
+# Bloxd Shader Packs — Le Guide Complet (FR)
 
-**Guide complet et fondé sur des données pour créer des shader packs Bloxd.io (rendu WebGPU).**
-Construit à partir de données moteur mesurées, d'une table numérique complète des ids de blocs,
-de dissections de packs publiés et d'une chaîne de validation locale — pas au feeling.
+**Tout ce qu'on sait sur les shader packs Bloxd.io, expliqué le plus simplement
+possible :** comment le rendu web dessine l'image, comment les shaders fonctionnent,
+ce qu'un pack peut faire, ce qu'il ne peut pas faire, et comment en construire un —
+fondé sur des données moteur mesurées, une table numérique complète des ids de
+blocs, des packs de la communauté disséqués, et une validation locale dans les 8
+variantes du moteur.
 
 > Non officiel. Sans affiliation avec Bloxd.io. L'API peut changer sans préavis.
-> Portions assemblées avec assistance IA ; vérifiez en jeu. Format multilingue inspiré de
-> [imu31465/Bloxd.io-How-To-Make-Shader-Packs](https://github.com/imu31465/Bloxd.io-How-To-Make-Shader-Packs).
 
-## Pourquoi ce guide est différent
+## 🚪 Commencer ici (choisissez votre porte)
 
-| Les autres guides | Celui-ci |
+| Vous êtes… | Commencez par |
 |---|---|
-| « skyLight est une luminosité 0-1 » | skyLight est **tone-mappé** ; seuils réels mesurés (0.45/0.98 ↔ 0.4/0.9 avant courbe) |
-| « vérifie le nom du bloc » | **Table numérique complète des ids** (0 → 3254+) avec annexe live issue d'un pack publié |
-| « utilise les hooks » | Contrat complet : canal `var<private>` surface→light, `bloxdFaceBlock`, `bloxdOpaqueBehind`, `skyLightColour`, `litColour` — prouvés dans un pack publié |
-| fog au folklore | internals du fog (bande 32 blocs, couleur défaut, noir en mode 0) avec provenance |
-| aucun outil | une **validation locale naga 8 variantes** qui prédit l'acceptation en jeu |
+| **Débutant en shaders** (ou en code) | ⭐ [Partie 0 — Partir de zéro](00-depart.md) — comment le rendu marche, ce qu'est un shader, votre premier pack en 5 étapes |
+| **Codeur** qui veut le contrat | [Partie II — L'API](02-api.md), puis [Partie III — Recettes](03-recettes.md) |
+| **À la recherche d'un nombre** | [Partie VIII — Ids de blocs](08-ids-blocs.md) · [Partie X — Constantes](10-constantes.md) · [Partie IV — Réalisme](04-realisme.md) |
+| **Un pack cassé à réparer** | [Partie V — Dépannage](05-depannage.md) |
 
-## Le guide
+## 📚 Le guide (français, version approfondie)
 
 | Partie | Fichier | Contenu |
 |---|---|---|
-| I | [01-creation](01-creation.md) | format, pack minimal, multi-fichiers, caps, distribution |
-| II | [02-api](02-api.md) | hooks, structs, fonctions moteur, règles dures |
+| 0 | [00-depart](00-depart.md) | **partir de zéro** : rendu web, pipeline GPU, ce qu'est un shader, tout le possible/impossible, premier pack |
+| I | [01-creation](01-creation.md) | format du pack, pack minimal, chargement multi-fichiers, limites, distribution |
+| II | [02-api](02-api.md) | contrat complet hooks et structs, fonctions moteur, règles dures |
 | III | [03-recettes](03-recettes.md) | 12 recettes de production avec snippets WGSL |
 | IV | [04-realisme](04-realisme.md) | nombres mesurés : lumière, fog, optique de l'eau, courbes |
-| V | [05-depannage](05-depannage.md) | tous les modes de défaillance rencontrés ou disséqués |
-| VI | [06-implementation](06-implementation.md) | pipeline de validation locale & QA de packaging |
-| VII | [07-internes](07-internes.md) | internals moteur avec étiquettes de provenance |
-| VIII | [08-ids-blocs](08-ids-blocs.md) | la table numérique des ids de blocs |
-| IX | [09-sources](09-sources.md) | comment on sait tout ça — instruments, politique de provenance, questions ouvertes |
-| X | [10-constantes](10-constantes.md) | chaque constante de ce dépôt et des packs disséqués — **423**, générées depuis les sources, chacune avec son rôle |
+| V | [05-depannage](05-depannage.md) | tous les modes de défaillance connus et leur réparation |
+| VI | [06-implementation](06-implementation.md) | pipeline de validation locale (8 variantes) & QA de packaging |
+| VII | [07-internes](07-internes.md) | internes du moteur : temps, pipeline de lumière, ciel, chargeur |
+| VIII | [08-ids-blocs](08-ids-blocs.md) | la table numérique complète des ids de blocs (0 → 3254+) |
+| IX | [09-sources](09-sources.md) | comment chaque fait a été établi — instruments, provenance, questions ouvertes |
+| X | [10-constantes](10-constantes.md) | chaque constante (551), générées depuis les sources, chacune avec son rôle |
 
-## Langues
+## 🌍 Langues
 
-EN (canonique) et FR complets. Accueils traduits : Deutsch · Español · Português · Italiano ·
-Русский · 日本語 · 한국어 · 简体中文 (le fond reste EN/FR — traductions bienvenues).
+L'anglais et le français portent le guide approfondi complet (11 parties). Seize
+autres langues offrent le guide complet en une page (la Partie 0 intégrale :
+rendu, shaders, hooks, limites, premier pack, règles, glossaire) :
+[Deutsch](../de/README.md) · [Español](../es/README.md) · [Português](../pt/README.md) ·
+[Italiano](../it/README.md) · [Nederlands](../nl/README.md) · [Polski](../pl/README.md) ·
+[Türkçe](../tr/README.md) · [Русский](../ru/README.md) · [Українська](../uk/README.md) ·
+[العربية](../ar/README.md) · [हिन्दी](../hi/README.md) · [Bahasa Indonesia](../id/README.md) ·
+[Tiếng Việt](../vi/README.md) · [日本語](../ja/README.md) · [한국어](../ko/README.md) ·
+[简体中文](../zh-CN/README.md) — sommaire général : [index du guide](../README.md).
 
 ## Licence
 
-MIT. Snippets originaux ; constantes citées des packs disséqués créditées en place
-(Ellie/whoisEllie, Crownix/Breeze).
+MIT. Snippets originaux ; constantes citées des packs de la communauté créditées en
+place (Parties IX–X).

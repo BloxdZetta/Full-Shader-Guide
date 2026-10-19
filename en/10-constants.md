@@ -21,7 +21,7 @@
 | `bloxdTimeWrap` | f32 = **3600** | the wrap period of `bloxdTime()` (seconds) |
 | `bloxdOriginOffset()` | vec3i | floating-origin rebase; inject into world hashes |
 | `bloxdSunDirection()` | vec3f | unit sun vector; zero on sunless skies; moon = −this |
-| `bloxdFaceBlock(p,n)` | u32 | block id of the current face (surface hook) |
+| `bloxdFaceBlock(p,n)` | vec3i | cell (block coordinates) of the current face — per-block hash input; the id itself is `surface.blockId` / `light.blockId` |
 | `bloxdOpaqueBehind()` | {found,position} | first opaque block behind a liquid fragment |
 | `bloxdEyePosition()` | vec3f | camera position |
 | `bloxdApplyFog(c,l)` | vec3f | mix(fogColour, c, fogVisibility) |
@@ -44,22 +44,141 @@
 
 
 
-## cinematic-v5 (ours — frozen R16-R36 baseline) — 60 constants
+## cinematic-v5 (local pack — frozen baseline) — 183 constants
 
 | Constant | Value | Role |
 |---|---|---|
+| `TR_ALT_HAZE` | 0.15 | altitude haze: veil strength above 55 blocks |
+| `TR_AURORA_WATER` | 0.08 | water: night aurora reflection strength (in our reflection only) |
+| `TR_BACKLIGHT` | 0.18 | backlight: strength of vegetation against-sun glow |
+| `TR_BACKLIGHT_COL` | vec3f(1.0, 0.62, 0.28) | backlight: warm glow colour |
+| `TR_BAT_CHANCE` | 0.12 | bats: share of air cells at dusk |
+| `TR_BAT_COL` | vec3f(0.10, 0.09, 0.08) | bats: dark silhouette colour |
+| `TR_BAT_ROAM` | 0.8 | bats: erratic roaming radius |
+| `TR_BAT_SIZE` | 0.09 | bats: body size |
+| `TR_BAT_T_WING` | 9.424778 | bats: fast wing-beat speed (wrap-locked) |
+| `TR_BFLY_BODY` | 0.012 | butterflies: body sliver half-width |
+| `TR_BFLY_CHANCE` | 0.25 | butterflies: share of air cells holding one |
+| `TR_BFLY_COL1` | vec3f(0.95, 0.93, 0.85) | butterflies: white variant |
+| `TR_BFLY_COL2` | vec3f(0.98, 0.85, 0.30) | butterflies: yellow variant |
+| `TR_BFLY_COL3` | vec3f(0.90, 0.55, 0.25) | butterflies: orange variant |
+| `TR_BFLY_GAP` | 0.035 | butterflies: half-separation of the two wings |
+| `TR_BFLY_ROAM` | 0.4 | butterflies: roaming radius around the cell |
+| `TR_BFLY_SIZE` | 0.05 | butterflies: body size |
+| `TR_BFLY_TALL` | 1.35 | butterflies: wing-disc height ratio |
+| `TR_BFLY_T_WING` | 3.1415927 | butterflies: wing-beat angular speed (wrap-locked) |
+| `TR_BUG_COL` | vec3f(0.72, 0.06, 0.05) | ladybugs: shell red |
+| `TR_BUG_SHARE` | 0.12 | butterflies: share that are ladybugs instead |
+| `TR_CANOPY_HI` | 0.9995 | tree-effect window: skyLight of open sky (fields stay bare) |
+| `TR_CANOPY_LO` | 0.90 | tree-effect window: minimum skyLight (caves stay bare) |
+| `TR_CINEMA_BOOST` | 1.6 | cinema mode: multiplier on golden mist and backlight |
+| `TR_CINEMA_MODE` | false | cinema mode: false = normal, true = boosted atmosphere |
 | `TR_EDGE_AO` | 0.92 | edge AO strength (skyLight-weighted by law) |
+| `TR_EMBER_CHANCE` | 0.18 | lava: share of cells emitting rising embers |
+| `TR_EMBER_HEIGHT` | 2.2 | lava: ember rise height (blocks) |
+| `TR_EMBER_SIZE` | 0.03 | lava: ember angular size at 1 block |
+| `TR_EMBER_T_RISE` | 4.0 | lava: ember rise period (must divide 3600) |
 | `TR_EPSILON` | 0.0001 | generic epsilon guard |
+| `TR_FLY_CHANCE` | 0.18 | fireflies: share of air cells holding one |
+| `TR_FLY_COLOUR` | vec3f(1.0, 0.85, 0.45) | fireflies: glow colour |
+| `TR_FLY_SIZE` | 0.035 | fireflies: glow dot radius |
+| `TR_FLY_W_BLINK` | 0.0698132 | fireflies: blink angular speed (wrap-locked) |
+| `TR_FLY_W_BOB` | 0.7853981 | fireflies: hover bobbing angular speed (wrap-locked) |
+| `TR_GLASS_MIRROR` | 0.30 | glass: sky reflection strength (fresnel) |
+| `TR_GLASS_RIM` | 0.22 | glass: grazing-angle edge brightening |
 | `TR_GOLDEN_GAIN` | 0.50 | golden-hour gain |
 | `TR_GOLDEN_TINT` | vec3f(1.06, 1.005, 0.90) | golden-hour tint |
-| `TR_GRAIN` | 0.016 | film grain amount (distance-faded) |
+| `TR_GRAIN` | 0.0 | film grain amount (distance-faded) |
+| `TR_HZN_CLOUD_STR` | 0.45 | horizon cloud bank strength |
+| `TR_LAMP_FLICKER` | 0.10 | lamp flicker: spill modulation depth (0 = off) |
+| `TR_LAMP_SOFT_AO` | 0.55 | lamp softening: edge-AO kept near lamps |
+| `TR_LAMP_SOFT_GAIN` | 2.5 | lamp softening: blockLight to wash-factor gain |
+| `TR_LAMP_SOFT_GRAIN` | 0.5 | lamp softening: grain kept near lamps |
+| `TR_LAVA_FLOW_SCALE` | 0.55 | lava: viscous flow texture scale (much slower than water) |
+| `TR_LEAF_AUTUMN` | 0.12 | falling leaves: share of autumn-tinted leaves |
+| `TR_LEAF_AUTUMN_GOLD` | vec3f(0.87, 0.60, 0.16) | falling leaves: autumn golden tint |
+| `TR_LEAF_AUTUMN_RUST` | vec3f(0.62, 0.28, 0.09) | falling leaves: autumn rust tint |
+| `TR_LEAF_BACKLIT` | 0.35 | falling leaves: backlit glow when sun is behind |
+| `TR_LEAF_CELL` | 3.0 | falling leaves: air-cell size (one leaf max per cell) |
+| `TR_LEAF_CHANCE` | 0.3 | falling leaves: share of cells holding a leaf |
+| `TR_LEAF_DRIFT` | 0.06 | falling leaves: downwind drift (cloud direction) |
+| `TR_LEAF_FADE_LO` | 5.0 | falling leaves: distance where fading starts |
+| `TR_LEAF_FALL` | 0.6 | falling leaves: fall speed (must equal WRAP*CELL/3600 exactly) |
+| `TR_LEAF_FLUTTER` | 0.15 | falling leaves: vertical flutter amplitude |
+| `TR_LEAF_GUST` | 0.5 | falling leaves: sway boost during gusts |
+| `TR_LEAF_LEN` | 1.7 | falling leaves: leaf length/width aspect |
+| `TR_LEAF_LOD_SHRINK` | 0.45 | falling leaves: distant shrink share |
+| `TR_LEAF_ON` | true | feature toggle: falling leaves |
+| `TR_LEAF_RANGE` | 10.0 | falling leaves: draw distance from the eye |
+| `TR_LEAF_RIM` | 0.22 | falling leaves: centre rim-light strength |
+| `TR_LEAF_SIZE` | 0.09 | falling leaves: leaf half-width |
+| `TR_LEAF_SIZE_VAR` | 0.30 | falling leaves: per-leaf size variation (+/-) |
+| `TR_LEAF_STEPS` | 6 | falling leaves: ray-march samples along the view line |
+| `TR_LEAF_TIP` | 0.55 | falling leaves: pointed-tip taper strength |
+| `TR_LEAF_TWOTONE` | 0.18 | falling leaves: per-leaf two-tone variation |
+| `TR_LEAF_WRAP` | 720 | falling leaves: y-cell wrap for a seamless 3600 s loop |
+| `TR_LEAF_W_FLIP` | 2.199115 | falling leaves: flip angular speed (wrap-locked) |
+| `TR_LEAF_W_GUST` | 0.1047197 | falling leaves: gust cycle angular speed (wrap-locked) |
+| `TR_LEAF_W_SPIN` | 1.600467 | falling leaves: spin angular speed (wrap-locked) |
+| `TR_LEAF_W_SWAY_A` | 1.300270 | falling leaves: sway angular speed x (wrap-locked) |
+| `TR_LEAF_W_SWAY_B` | 0.900590 | falling leaves: sway angular speed z (wrap-locked) |
+| `TR_LITTER_DENS` | 0.82 | leaf litter: share of cells left bare |
+| `TR_LITTER_MIX` | 0.22 | leaf litter: ground blend strength under canopy |
+| `TR_LITTER_SCALE` | 3.0 | leaf litter: speckle cells per block |
+| `TR_MIST_GOLDEN` | 0.10 | aerial perspective / mist |
+| `TR_MIST_GOLDEN_COL` | vec3f(0.93, 0.96, 1.0) | aerial perspective / mist |
+| `TR_MIST_GROUND` | 0.12 | ground mist: strength at golden hour |
+| `TR_MIST_GROUND_BAND` | 3.5 | ground mist: height band around the eye (blocks) |
+| `TR_MIST_GROUND_COL` | vec3f(0.93, 0.96, 1.0) | ground mist: veil colour |
+| `TR_MIST_GROUND_HI` | 90.0 | ground mist: distance fade end (blocks) |
+| `TR_MIST_GROUND_LO` | 16.0 | ground mist: distance fade start (blocks) |
 | `TR_MOONLIGHT` | vec3f(0.30, 0.38, 0.55) | moonlight tint |
+| `TR_MOON_COLUMN` | 0.10 | water: moonlight column strength on the river |
 | `TR_MOON_GAIN` | 0.30 | moonlight gain |
+| `TR_MOTE_CHANCE` | 0.2 | air motes: share of cells holding one (cave spores / day pollen) |
+| `TR_MOTE_COL` | vec3f(0.55, 0.75, 1.0) | air motes: cave spore colour |
+| `TR_MOTE_SIZE` | 0.035 | air motes: angular size at 1 block |
+| `TR_POLLEN_COL` | vec3f(1.0, 0.85, 0.45) | air motes: golden pollen colour |
 | `TR_RELIEF_EPS` | 0.30 | relief-mapping step epsilon |
 | `TR_RELIEF_GAIN` | 1.6 | relief lighting gain |
 | `TR_RELIEF_HEIGHT` | 0.16 | relief heightfield amplitude |
 | `TR_RELIEF_SCALE` | 1.7 | relief-mapping height scale |
 | `TR_SCOTO` | 0.5 | scotopic (rod-vision) mixing strength |
+| `TR_SKY2_BAND_A` | -0.22 | sun elevation: full night below this |
+| `TR_SKY2_BAND_B` | -0.04 | sun elevation: twilight begins here |
+| `TR_SKY2_BAND_C` | 0.10 | sun elevation: day begins here |
+| `TR_SKY2_BAND_D` | 0.30 | sun elevation: full day above this |
+| `TR_SKY2_GLOW_DAWN` | vec3f(1.0, 0.70, 0.38) | dawn sun-glow colour |
+| `TR_SKY2_GLOW_DUSK` | vec3f(1.0, 0.50, 0.26) | dusk sun-glow colour |
+| `TR_SKY2_GLOW_NIGHT` | vec3f(0.50, 0.62, 0.92) | moon-glow colour |
+| `TR_SKY2_NIGHT_LOW` | vec3f(0.07, 0.10, 0.20) | night sky horizon colour (deep blue) |
+| `TR_SKY2_NIGHT_TOP` | vec3f(0.01, 0.02, 0.06) | night sky zenith colour |
+| `TR_SKY2_TWI_LOW` | vec3f(0.98, 0.62, 0.42) | twilight sky horizon colour (peach-gold) |
+| `TR_SKY2_TWI_TOP` | vec3f(0.34, 0.34, 0.62) | twilight sky zenith colour (mauve) |
+| `TR_SKYF_CURVE` | 1.6 | sky-fog: elevation-curve steepness (Blocky Day proven) |
+| `TR_SKYF_FOG_MIX` | 0.9 | sky-fog: share of the engine fog colour replaced by the sky gradient |
+| `TR_SKYF_GLOW` | 0.55 | sky-fog: sun-glow strength (Blocky Day HORIZON_GLOW) |
+| `TR_SKYF_GLOW_COL` | vec3f(1.00, 0.78, 0.50) | sky-fog: sun-glow colour inside the fake sky |
+| `TR_SKYF_HAZE_DESAT` | 0.10 | aerial-haze grey desaturation (lower = bluer sky feel) |
+| `TR_SKYF_HORIZON_MIX` | 0.85 | sky-fog: horizon haze blend into the fake sky |
+| `TR_SKYF_LOW` | vec3f(0.70, 0.80, 0.96) | sky-fog: fake-sky horizon colour (Blocky Day proven) |
+| `TR_SKYF_TOP` | vec3f(0.25, 0.45, 0.85) | sky-fog: fake-sky zenith colour (Blocky Day proven) |
+| `TR_SOFTEN_AMOUNT` | 0.0 | face-speckle smoothing strength (anti-seam) |
+| `TR_SOFTEN_GRAIN_NEAR` | 14.0 | distance where the fine grain layer stops |
+| `TR_SOFTEN_LEVEL` | 0.5 | brightness smoothed faces settle towards |
+| `TR_SOFTEN_MIST` | 0.0 | soft cloud-blotch strength on faces |
+| `TR_SOFTEN_MIST_FAR` | 48.0 | distance where blotches fade out |
+| `TR_SOFTEN_MIST_SIZE` | 5.0 | blotch frequency per block |
+| `TR_SPLASH_BRIGHT` | 1.6 | lava: droplet brightness |
+| `TR_SPLASH_CHANCE` | 0.35 | lava: share of cells with an active splash source |
+| `TR_SPLASH_COL` | vec3f(1.0, 0.55, 0.15) | lava: droplet colour |
+| `TR_SPLASH_HEIGHT` | 0.45 | lava: droplet apex height |
+| `TR_SPLASH_SIZE` | 0.045 | lava: droplet angular size at 1 block |
+| `TR_SPLASH_TRAIL` | 0.05 | lava: trail spacing behind the drop (fraction of cycle) |
+| `TR_SPLASH_T_RISE` | 3.0 | lava: rise-and-fall period (must divide 3600) |
+| `TR_SWAY_FLOWER_HI` | 163u | flower id range end (sway gate) |
+| `TR_SWAY_FLOWER_LO` | 151u | flower id range start (sway gate) |
+| `TR_SWAY_VINE_W` | 0.5 | vine sway weight (id 219) |
 | `TR_VIBRANCE` | 0.16 | pre-fog grade (lift + chroma-guarded vibrance) |
 | `TR_WATER_CLARITY` | 0.82 | water clarity (view-through) |
 | `TR_WATER_DAY_TINT` | vec3f(0.34, 0.78, 0.82) | water tint, day band |
@@ -79,6 +198,9 @@
 | `TR_WAVE_OMEGA_D` | 1.605703 | wave band D angular frequency (frozen R17) |
 | `TR_WAVE_OMEGA_E` | 1.982694 | wave band E angular frequency (frozen R17) |
 | `TR_WAVE_OMEGA_F` | 2.415536 | wave band F angular frequency (frozen R17) |
+| `TR_WAVE_SWELL_AMP` | 0.15 | water: long swell normal amplitude |
+| `TR_WAVE_SWELL_FOAM` | 0.20 | water: foam strength on swell crests |
+| `TR_WAVE_SWELL_SCALE` | 0.10 | water: swell spatial frequency (radians per block) |
 | `bloom_spill` | 0.5 | bloom bleed amount |
 | `cloud_height` | 100.0 | cv5 cloud layer altitude |
 | `cloud_scale` | 0.006 | cv5 cloud noise scale |
@@ -90,7 +212,7 @@
 | `haze_base_height` | 40.0 | fog reference altitude |
 | `haze_density` | 0.006 | height-fog density |
 | `haze_height_falloff` | 0.012 | fog altitude falloff |
-| `haze_strength` | 0.4 | height-fog strength |
+| `haze_strength` | 0.48 | height-fog strength |
 | `hot_glow_strength` | 0.2 | lava/hot-emitter glow |
 | `leaf_glow` | 0.6 | leaf translucency glow |
 | `luma` | vec3f(0.299, 0.587, 0.114) | Rec.709 luminance weights |
@@ -107,9 +229,10 @@
 | `sway_mode` | 2 | sway implementation selector; 2 = colour-only (runs everywhere) |
 | `sway_speed` | 1.0 | sway time multiplier |
 | `tall_grass_id` | 1109u | Tall Grass plant id (same gate) |
+| `tall_grass_top_id` | 1110u | Tall Grass top-half block id (sway gate) |
 | `underwater_strength` | 0.30 | underwater colour grade strength |
 
-## titan-bsl-ultra-v2 (ours — sky/cloud/water showcase) — 288 constants
+## titan-bsl-ultra-v2 (local pack — sky/cloud/water showcase) — 288 constants
 
 | Constant | Value | Role |
 |---|---|---|
@@ -129,7 +252,7 @@
 | `TR_AURORA_GAIN` | 0.34 | night-sky features (stars/milky way/aurora/meteors) |
 | `TR_AURORA_HIGH` | 0.62 | night-sky features (stars/milky way/aurora/meteors) |
 | `TR_AURORA_LOW` | 0.06 | night-sky features (stars/milky way/aurora/meteors) |
-| `TR_BACKLIGHT` | 0.30 | backlight rim on foliage |
+| `TR_BACKLIGHT` | 0.30 | backlight: strength of vegetation against-sun glow |
 | `TR_BLOCK_AMBIENT` | 0.55 | block-light ambient & roughness response |
 | `TR_BLOCK_ROUGH_SPREAD` | 0.06 | block-light ambient & roughness response |
 | `TR_BLOCK_VARIATION` | 0.018 | per-block / per-cell brightness variation |
@@ -402,12 +525,17 @@
 | `TR_WIND_FIELD_SPEED` | 0.551111 | wind field for foliage |
 | `TR_WIND_SPEED_STEP` | 0.013889 | wind master settings |
 
-## PROBE-DIAG-v1 (ours — measurement probe, never shipped) — 14 constants
+## PROBE-DIAG-v2 (measurement probe, modes 0-15) — 19 constants
 
 | Constant | Value | Role |
 |---|---|---|
 | `MODE_0_SKYLIGHT_RAW` | 0 | probe mode 0 — raw skyLight to all channels |
 | `MODE_10_DIRECTIONAL_GRAY` | 10 | probe mode 10 — terrain directional light as grey |
+| `MODE_11_DEPTH_DEFINE` | 11 | probe mode 11 — is BLOXD_SCENE_DEPTH active (green/red) |
+| `MODE_12_DEPTH_FOUND` | 12 | probe mode 12 — bloxdOpaqueBehind().found (green/red) |
+| `MODE_13_DEPTH_PATH_BANDS` | 13 | probe mode 13 — water path depth colour bands |
+| `MODE_14_DEPTH_VERTICAL_BANDS` | 14 | probe mode 14 — vertical depth colour bands |
+| `MODE_15_DEPTH_BED_ANCHOR` | 15 | probe mode 15 — bed anchor visualisation (fract bed.y) |
 | `MODE_1_SKY_LEVEL_0_15` | 1 | probe mode 1 — skyLight rescaled 0-15 |
 | `MODE_2_BLOCKLIGHT_RGB` | 2 | probe mode 2 — blockLight RGB as colour |
 | `MODE_3_HELDLIGHT_RGB_X4` | 3 | probe mode 3 — heldLight ×4 (visibility boost) |

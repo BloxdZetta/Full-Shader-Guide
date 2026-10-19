@@ -1,7 +1,7 @@
 # Partie II — Le contrat API (FR)
 
-Provenances : **[publié]** = prouvé dans un pack en production · **[nôtre]** = exercé par nos
-packs validés.
+Provenances : **[publié]** = prouvé dans un pack en production · **[local]** = exercé par des
+packs validés localement.
 
 ## Les quatre hooks
 
@@ -48,7 +48,7 @@ BloxdLight     { colour /* … */ }
 | `bloxdTime()` / `bloxdTimeWrap` | secondes, wrap 3600 — animer en **cycles entiers** |
 | `bloxdEyePosition()` | caméra (distances, LOD, vecteurs de vue) |
 | `bloxdOriginOffset()` | rebase floating-origin — **à injecter dans tout hash monde** |
-| `bloxdFaceBlock(pos, normal)` | id du bloc de la face courante (hook surface) **[publié]** |
+| `bloxdFaceBlock(pos, normal)` | les **coordonnées** du bloc de la face courante — entrée de hash par bloc ; l'id est `surface.blockId` / `light.blockId` **[publié]** |
 | `bloxdOpaqueBehind()` | `{found, position}` — épaisseur d'eau, approx réfraction **[publié]** |
 
 ## Règles dures

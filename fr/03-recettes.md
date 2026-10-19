@@ -14,7 +14,8 @@ fn isLeaf(id: u32) -> bool {
 ```
 
 Groupes d'ids en Partie VIII. Hook light → `light.blockId` ; hook surface →
-`bloxdFaceBlock(surface.position, surface.normal)`.
+`surface.blockId` — `bloxdFaceBlock(surface.position, surface.normal)` donne les coordonnées
+du bloc, l'entrée que veulent les hashs par bloc.
 
 ## R2 — Ombre de canopée (l'astuce des « soft tree shadows »)
 

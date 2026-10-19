@@ -7,14 +7,14 @@ because a guide that tells you *how it knows* is worth ten that just assert.
 
 | Label | Meaning | Trust policy |
 |---|---|---|
-| **[measured]** | produced by our instruments: probe packs that write engine quantities into colour channels, screenshot pipelines with fixed camera/world setups, curve fitting on captured frames | trust within the measured envelope |
+| **[measured]** | produced by local instruments: probe packs that write engine quantities into colour channels, screenshot pipelines with fixed camera/world setups, curve fitting on captured frames | trust within the measured envelope |
 | **[shipped]** | proven by a released community pack running in the live game (e.g. Breeze v1, dissected file-by-file) | trust — the game itself accepted it |
 | **[3rd-party]** | restored from production JS by community analysis (the imu31465 internals, npm type dumps, wiki) | never load-bearing until measured; cited because they guided our probes |
 
 ## The instruments
 
 - **8-variant naga harness** — the engine’s prelude stubbed per variant (strict/allow × lit/unlit
-  × terrain/liquid). Every release of ours compiles 8/8 before it ships; that record has predicted
+  × terrain/liquid). Every local release compiles 8/8 before it ships; that record has predicted
   in-game acceptance across dozens of releases.
 - **42-case WGSL fuzz** — malformed shapes fed through the compiler to map what breaks naga vs
   what breaks the browser Tint (two different compilers; the game uses the browser’s).

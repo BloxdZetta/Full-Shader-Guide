@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — 完全ガイド（日本語）
 
-🌐 [全言語](README.md) · 深掘り: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [全言語](../README.md) · 深掘り: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **まずこれを読んでください。**経験は要りません。10分で、ゲームがどう絵を描くか、シェーダーとは何か、シェーダーパックにできること・できないことが分かります。
 
@@ -246,4 +246,4 @@ fn bloxdTerrainLight(surface: BloxdSurface, light: BloxdLightIn) -> BloxdLight {
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | 本ガイドの各事実の根拠 |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | 役割付きで定数すべて |
 
-フランス語完全版： [fr](GUIDE-FR.md) · 全言語： [目次](README.md)。ライセンス： MIT。
+フランス語完全版： [fr](GUIDE-FR.md) · 全言語： [目次](../README.md)。ライセンス： MIT。

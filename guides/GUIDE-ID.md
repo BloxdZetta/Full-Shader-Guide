@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — Panduan lengkap (Bahasa Indonesia)
 
-🌐 [Semua bahasa](README.md) · Lebih dalam: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [Semua bahasa](../README.md) · Lebih dalam: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **Baca ini dulu.** Tidak perlu pengalaman. Dalam sepuluh menit kamu akan tahu bagaimana game
 menggambar gambar, apa itu shader, dan apa saja yang bisa dan tidak bisa dilakukan shader pack.
@@ -305,4 +305,4 @@ Melanggar apa pun dari ini merusak pack atau membuatnya ditolak:
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | bagaimana setiap fakta panduan ini ditetapkan |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | setiap konstanta, dengan perannya |
 
-Versi Prancis lengkap: [fr](GUIDE-FR.md) · Semua bahasa: [index](README.md). Lisensi: MIT.
+Versi Prancis lengkap: [fr](GUIDE-FR.md) · Semua bahasa: [index](../README.md). Lisensi: MIT.

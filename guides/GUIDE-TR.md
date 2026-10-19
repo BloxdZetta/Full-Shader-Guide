@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — Eksiksiz kılavuz (Türkçe)
 
-🌐 [Tüm diller](README.md) · Derinlemesine: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [Tüm diller](../README.md) · Derinlemesine: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **Önce bunu oku.** Deneyim gerekmez. On dakikada oyunun görüntüyü nasıl çizdiğini, shader'ın ne
 olduğunu ve bir shader pack'in tam olarak ne yapıp ne yapamayacağını öğreneceksin.
@@ -311,4 +311,4 @@ Herhangi birini kırmak pack'i bozar veya reddettirir:
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | bu kılavuzdaki her bilginin nasıl kanıtlandığı |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | her sabit (551) rolüyle |
 
-Fransızca tam sürüm: [fr](GUIDE-FR.md) · Tüm diller: [index](README.md). Lisans: MIT.
+Fransızca tam sürüm: [fr](GUIDE-FR.md) · Tüm diller: [index](../README.md). Lisans: MIT.

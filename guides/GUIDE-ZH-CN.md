@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — 完整指南（简体中文）
 
-🌐 [所有语言](README.md) · 深挖： [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [所有语言](../README.md) · 深挖： [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **先读这个。** 无需任何经验。十分钟内，你将知道游戏如何绘制画面、什么是着色器，以及着色器包能
 做什么和不能做什么。
@@ -279,4 +279,4 @@ fn bloxdTerrainLight(surface: BloxdSurface, light: BloxdLightIn) -> BloxdLight {
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | 本指南中每个事实立论的方法 |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | 每一个常量及其角色（551 个） |
 
-法文完整版：[fr](GUIDE-FR.md) · 所有语言：[索引](README.md)。授权：MIT。
+法文完整版：[fr](GUIDE-FR.md) · 所有语言：[索引](../README.md)。授权：MIT。

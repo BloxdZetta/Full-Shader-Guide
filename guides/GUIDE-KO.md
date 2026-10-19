@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — 완전 가이드 (한국어)
 
-🌐 [모든 언어](README.md) · 심화: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [모든 언어](../README.md) · 심화: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **이것을 먼저 읽으세요.** 경험이 필요 없습니다. 10분이면 게임이 어떻게 화면을 그리는지, 셰이더가 무엇인지,
 그리고 셰이더 팩이 무엇을 할 수 있고 무엇을 할 수 없는지 알게 됩니다.
@@ -276,4 +276,4 @@ fn bloxdTerrainLight(surface: BloxdSurface, light: BloxdLightIn) -> BloxdLight {
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | 이 가이드의 모든 사실이 어떻게 증명됐는지 |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | 역할 설명과 함께 모든 상수(551) |
 
-프랑스어 완성판: [fr](GUIDE-FR.md) · 모든 언어: [목차](README.md). 라이선스: MIT.
+프랑스어 완성판: [fr](GUIDE-FR.md) · 모든 언어: [목차](../README.md). 라이선스: MIT.

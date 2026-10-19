@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — पूर्ण मार्गदर्शिका (हिन्दी)
 
-🌐 [सभी भाषाएँ](README.md) · गहराई में: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [सभी भाषाएँ](../README.md) · गहराई में: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **इसे पहले पढ़ें।** कोई अनुभव ज़रूरी नहीं। दस मिनट में आप जानेंगे कि खेल अपनी तस्वीर कैसे बनाता है,
 shader क्या है, और shader pack क्या कर सकता है और क्या नहीं।
@@ -295,4 +295,4 @@ fn bloxdTerrainLight(surface: BloxdSurface, light: BloxdLightIn) -> BloxdLight {
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | इस गाइड का हर तथ्य कैसे सिद्ध हुआ |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | हर constant, उसकी भूमिका सहित |
 
-पूरा फ्रेंच संस्करण: [fr](GUIDE-FR.md) · सभी भाषाएँ: [index](README.md)। लाइसेंस: MIT।
+पूरा फ्रेंच संस्करण: [fr](GUIDE-FR.md) · सभी भाषाएँ: [index](../README.md)। लाइसेंस: MIT।

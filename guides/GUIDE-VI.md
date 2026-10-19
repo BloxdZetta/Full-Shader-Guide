@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — Hướng dẫn đầy đủ (Tiếng Việt)
 
-🌐 [Tất cả ngôn ngữ](README.md) · Sâu hơn: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [Tất cả ngôn ngữ](../README.md) · Sâu hơn: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **Đọc cái này trước.** Không cần kinh nghiệm. Trong mười phút bạn sẽ biết game vẽ hình như thế nào,
 shader là gì, và chính xác shader pack làm được gì và không làm được gì.
@@ -287,4 +287,4 @@ Phá bất kỳ luật nào sẽ hỏng pack hoặc bị từ chối:
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | mỗi sự thật của hướng dẫn này được xác lập ra sao |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | mọi hằng số, kèm vai trò |
 
-Bản Pháp đầy đủ: [fr](GUIDE-FR.md) · Mọi ngôn ngữ: [mục lục](README.md). Giấy phép: MIT.
+Bản Pháp đầy đủ: [fr](GUIDE-FR.md) · Mọi ngôn ngữ: [mục lục](../README.md). Giấy phép: MIT.

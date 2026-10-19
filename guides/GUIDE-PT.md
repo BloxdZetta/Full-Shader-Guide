@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — Guia completo (Português)
 
-🌐 [Todos os idiomas](README.md) · Em profundidade: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [Todos os idiomas](../README.md) · Em profundidade: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **Leia isto primeiro.** Nenhuma experiência necessária. Em dez minutos, você saberá como o jogo
 desenha sua imagem, o que é um shader e exatamente o que um shader pack pode e não pode fazer.
@@ -310,4 +310,4 @@ Quebrar qualquer uma quebra o pack ou faz ele ser rejeitado:
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | como cada fato deste guia foi estabelecido |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | cada constante (551) com seu papel |
 
-Versão completa em francês: [fr](GUIDE-FR.md) · Todos os idiomas: [índice](README.md). Licença: MIT.
+Versão completa em francês: [fr](GUIDE-FR.md) · Todos os idiomas: [índice](../README.md). Licença: MIT.

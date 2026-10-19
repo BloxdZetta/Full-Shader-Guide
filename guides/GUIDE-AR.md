@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — الدليل الكامل (العربية)
 
-🌐 [جميع اللغات](README.md) · بالعمق: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [جميع اللغات](../README.md) · بالعمق: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **اقرأ هذا أولاً.** لا حاجة إلى خبرة. في عشر دقائق ستعرف كيف ترسم اللعبة صورتها، وما هو الـ shader،
 وماذا يستطيع الـ shader pack أن يفعل وماذا لا يستطيع، بدقة.
@@ -295,4 +295,4 @@ fn bloxdTerrainLight(surface: BloxdSurface, light: BloxdLightIn) -> BloxdLight {
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | كيف أُسس كل حقيقة في هذا الدليل |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | كل ثابت، مع دوره |
 
-النسخة الفرنسية الكاملة: [fr](GUIDE-FR.md) · جميع اللغات: [فهرس](README.md). ترخيص: MIT.
+النسخة الفرنسية الكاملة: [fr](GUIDE-FR.md) · جميع اللغات: [فهرس](../README.md). ترخيص: MIT.

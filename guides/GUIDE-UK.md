@@ -1,6 +1,6 @@
 # Bloxd Shader Packs — Повний посібник (Українська)
 
-🌐 [Усі мови](README.md) · Поглиблено: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+🌐 [Усі мови](../README.md) · Поглиблено: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
 
 **Прочитайте це першим.** Досвід не потрібен. За десять хвилин ви дізнаєтесь, як гра малює
 картинку, що таке шейдер і що саме шейдерпак може й не може.
@@ -307,4 +307,4 @@ fn bloxdTerrainLight(surface: BloxdSurface, light: BloxdLightIn) -> BloxdLight {
 | IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | як встановлено кожен факт цього посібника |
 | X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | кожна константа (551) з її роллю |
 
-Повна французька версія: [fr](GUIDE-FR.md) · Усі мови: [index](README.md). Ліцензія: MIT.
+Повна французька версія: [fr](GUIDE-FR.md) · Усі мови: [index](../README.md). Ліцензія: MIT.

@@ -1,0 +1,302 @@
+# Bloxd Shader Packs — 완전 가이드 (한국어)
+
+🌐 [모든 언어](README.md) · 심화: [English](GUIDE-EN.md#part-0--start-from-zero-how-rendering-and-bloxd-shaders-work) · [Français](GUIDE-FR.md)
+
+**이것을 먼저 읽으세요.** 경험이 필요 없습니다. 10분이면 게임이 어떻게 화면을 그리는지, 셰이더가 무엇인지,
+그리고 셰이더 팩이 무엇을 할 수 있고 무엇을 할 수 없는지 알게 됩니다.
+
+> **범위: API v2.** 이 가이드는 `apiVersion: 2`와 현재 WebGPU/Lite 경로를 다룹니다. 미래 버전을 예상해 `apiVersion`을 바꾸지 마세요.
+
+## 1. 1분 버전
+
+- Bloxd.io는 복셀 게임입니다: 세계는 큐브(블록)로 되어 있습니다.
+- 화면의 그림은 그래픽 카드(GPU)가 초당 60번 이상 그립니다.
+- **셰이더**는 GPU에서 실행되며 픽셀 색상을 결정하는 아주 작은 프로그램입니다.
+- **셰이더 팩**은 셰이더 코드가 들어간 작은 `.zip` 파일입니다. 게임이 이를 로드하면 여러분의 코드가
+  **블록, 물, 용암**이 그려지는 동안 색상을 바꿉니다.
+- 게임 자체를 바꾸지 않습니다. 오직 각 픽셀이 그려지는 그 순간의 색상과 빛만 바꿉니다.
+
+## 2. 그림이 그려지는 과정 (웹 렌더링, 단계별)
+
+화면은 **픽셀**이라는 작은 점들의 격자입니다(예: 1920 × 1080 = 약 200만 픽셀). 완성된 그림 하나가
+**프레임**입니다. 게임은 새 프레임을 계속 그립니다 — 그래서 움직임이 부드럽게 보입니다.
+
+두 처리 장치가 일을 나눕니다:
+
+| | CPU (메인 프로세서) | GPU (그래픽 카드) |
+|---|---|---|
+| 역할 | 게임 로직, 물리, 네트워크 | 수백만 픽셀을 아주 빠르게, 병렬로 그리기 |
+| 스타일 | 적은 일꾼, 아주 똑똑함 | 수천 명의 일꾼, 각자 아주 단순함 |
+
+웹에서는 흐름이 이렇습니다:
+
+1. 게임은 브라우저에서 JavaScript로 실행됩니다(최신 Chrome 또는 Edge가 최적).
+2. 게임은 브라우저의 현대 그래픽 API인 **WebGPU** 를 통해 GPU와 통신합니다.
+3. 브라우저 내부에서 **Dawn**(컴파일러 **Tint** 포함)이 셰이더 언어 **WGSL** 을 GPU가 이해하는 명령으로
+   번역합니다(시스템에 따라 Direct3D / Metal / Vulkan).
+4. GPU가 셰이더를 실행해 완성된 프레임을 화면에 띄웁니다.
+
+Bloxd 자체는 3D 프레임워크(**Babylon.js**) 위의 복셀 엔진(**noa-engine**)으로 만들어졌습니다. 매 프레임
+마다 드로잉 파이프라인은 이렇게 합니다:
+
+1. **청크.** 세계는 청크라고 불리는 블록 기둥으로 나뉩니다. 주변 청크만 드로잉 준비를 합니다.
+2. **메싱.** 청크마다 엔진은 실제로 보이는 블록 면만 덮는 삼각형 껍질인 *메시*를 만듭니다. 숨겨진 면은 건너뜁니다.
+3. **텍스처 아틀라스.** 모든 블록 텍스처가 들어 있는 한 장의 큰 그림, **아틀라스**에서 각 블록 면이 그림을 가져옵니다.
+   각 면은 아틀라스의 어떤 작은 사각형을 쓸지 압니다(**UV** 좌표).
+4. **정점 단계.** GPU는 각 삼각형의 각 모서리(정점)마다 *정점 셰이더*를 실행합니다: 모서리를 화면의
+   올바른 위치에 놓고 데이터(텍스처 좌표, 빛 값, 면 방향 등)를 전달합니다.
+5. **래스터화.** GPU는 각 삼각형을 픽셀로 채웁니다. 덮인 픽셀은 **프래그먼트**가 됩니다: 보간된 데이터를
+   가진 픽셀 후보입니다.
+6. **프래그먼트 단계.** GPU는 프래그먼트마다 *프래그먼트 셰이더*를 실행합니다: 여기서 픽셀의 최종 색상이
+   결정됩니다. **Bloxd 셰이더 팩이 사는 곳입니다.**
+7. **화면.** 완성된 프레임이 표시됩니다. 그다음 다음 프레임을 위해 반복됩니다.
+
+```mermaid
+flowchart LR
+    A[블록 세계] --> B[청크]
+    B --> C[메시: 보이는 면만]
+    C --> D[정점 단계: 모서리 배치]
+    D --> E[래스터화: 픽셀 채우기]
+    E --> F[프래그먼트: 팩이 색을 바꿈]
+    F --> G[화면]
+```
+
+핵심 아이디어: 팩은 "세계"를 보지 않습니다. **한 번에 한 프래그먼트** — 한 블록 면의 픽셀 하나 — 와 그 픽셀에
+대한 일부 데이터만 봅니다. 팩이 하는 모든 일은 그 지역 데이터로 계산되어야 합니다.
+
+## 3. 셰이더란 무엇인가
+
+셰이더는 GPU가 병렬로 엄청나게 많은 횟수 실행하는 작은 함수(작은 코드 조각)입니다 — 정점마다 한 번, 또는
+프래그먼트마다 한 번. 셰이더는 빠르고 자립적이어야 합니다: 파일 없음, 네트워크 없음, 이전 프레임의 기억 없음.
+
+Bloxd 팩은 **WGSL**(WebGPU Shading Language)로 씁니다. 셰이더 전체를 쓰는 게 아닙니다. 엔진에는 이미 자기 셰이더가 있고, **훅**이라 불리는 여섯 고정 지점(5절)에 코드를 끼울 수 있습니다: 두 프로그램(terrain, liquid) × 세 단계(vertex, surface, light). vertex 문에서는 모서리를 어디에 둘지, surface와 light 문에서는 이 픽셀이 최종적으로 어떻게 보여야 할지를 묻습니다.
+
+## 4. Bloxd 셰이더 팩이란
+
+팩은 다음이 들어간 `.zip` 파일입니다:
+
+```
+pack.json     (작은 메타데이터 파일)
+*.wgsl        (WGSL 코드 — 파일 하나 또는 여러 개, 폴더 자유)
+```
+
+`pack.json`에는 이것만 필요합니다:
+
+```json
+{ "apiVersion": 2, "name": "내 팩", "author": "당신" }
+```
+
+- `apiVersion`은 정확히 JSON 숫자 **2**여야 합니다(문자열 아님). 옛 v1 팩은 거부됩니다.
+- 임포터는 폴더나 `.zip` **하나**를 받습니다. 경로 정규화 뒤 `pack.json`이 정확히 하나여야 하고, 모든 파일이 공유하는 루트 폴더는 자동으로 제거됩니다.
+- 매니페스트는 ≤ **65,536 bytes** UTF-8 JSON 객체입니다. `name`은 trim 후 비어 있지 않아야 하고, `author`는 선택적인 문자열 또는 `null`이며, 다른 키는 무시됩니다.
+- 소스: **1–256**개 `.wgsl`, 경로순 정렬; 압축 해제 총합 ≤ **262,144 bytes**; 중복 경로와 잘못된 UTF-8은 거부되고 다른 파일은 무시됩니다.
+- Zip은 ≤ **33,554,432 bytes**, ≤ **1,024** 항목; stored/deflate만 읽고 Zip64, 멀티 디스크, 암호화는 거부됩니다.
+
+설치: Bloxd → `O` 설정 → 그래픽 → **Use New WebGPU Renderer** 켜기 → Shader Pack → 폴더 또는 `.zip` 선택 → **Apply** → **페이지 새로고침**. 쓸 수 있는 WebGPU가 없으면 팩이 저장돼도 차단 상태로 남습니다.
+
+팩은 **블록, 물, 용암**에만 영향을 줍니다. 일부 게임 모드는 팩을 완전히 비활성화합니다.
+
+## 5. 여섯 개의 훅 (유일한 문)
+
+| 훅 | 언제 실행 | 여러분이 제어하는 것 |
+|---|---|---|
+| `bloxdTerrainVertex` | 정점마다, 지형, 투영 전 | 각 모서리의 월드 위치(allow 게임만) |
+| `bloxdTerrainSurface` | 프래그먼트별, 고체 블록, 먼저 | 기본 색, 투명도(알파), 자체 발광(emission) |
+| `bloxdTerrainLight` | 같은 프래그먼트, 곧바로 다음 | 블록의 최종 조명 색 |
+| `bloxdLiquidVertex` | 정점마다, 액체, 투영 전 | 각 액체 모서리의 월드 위치(allow 게임만) |
+| `bloxdLiquidSurface` | 프래그먼트별, 물·용암, 먼저 | 액체의 기본 색과 알파 |
+| `bloxdLiquidLight` | 같은 프래그먼트, 곧바로 다음 | 액체의 최종 조명 색 |
+
+문의 규칙:
+
+- Surface는 Light보다 **먼저** 같은 프래그먼트에서 실행됩니다. 모듈 스코프 변수(`var<private>`)로 surface에서
+  light로 값을 전달할 수 있습니다.
+- 항상 엔진의 기본 결과에서 시작하세요: `bloxdDefaultSurface(...)` 또는 `bloxdDefaultLight(...)`에서
+  필요한 것만 바꾸고 반환합니다. 결과 struct는 직접 만들지 마세요.
+- Surface 훅은 엔진의 투명 잘라내기(cutout) 테스트 전에 실행됩니다. 잎사귀와 잘린 블록에서는 `out.alpha`가
+  픽셀을 남길지 버릴지 정하고, 액체에서는 실제 혼합 계수이며, 일반 고체 블록에서는 알파가 아무 일도 하지 않습니다.
+- 자체 발광(`out.emission`)은 **surface** 훅 전용입니다.
+- Light 훅에서 최종 색을 직접 쓰면, 끝에 `bloxdApplyFog(colour, light)` 로 안개를 직접 적용하세요 —
+  엔진의 안개는 항상 장면에 있고, 이를 건너뛰면 먼 블록이 안개를 뚫고 밝게 보입니다.
+
+- 액체 단계가 없으면 대응하는 terrain 훅으로 떨어집니다. surface/light 짝이 없으면 그 fragment 단계는 엔진 기본값을 씁니다. vertex는 선택이며 `bloxdDefaultVertex(...)`에서 시작합니다.
+- vertex 훅이나 도달 가능한 `discard`는 팩을 거부하지 않습니다. strict에서 그 프로그램을 끄고, strict가 기본 정책입니다.
+- `out.alpha`는 `BLOXD_ALPHA` 아래에서만 있습니다(terrain+strict에서만 없음). 액체는 항상 alpha가 있습니다. light가 돌려준 RGB는 최종 RGB를 바꾸므로 fog를 유지하려면 `bloxdApplyFog`를 쓰세요.
+
+## 6. 엔진이 알려주는 것
+
+프래그먼트마다 여러분의 훅이 데이터를 받습니다. 가장 유용한 필드들:
+
+| 데이터 | 쉬운 설명 |
+|---|---|
+| `colour` | 이 픽셀의 블록 텍스처 색(아틀라스에서), 변경 전 |
+| `blockId` | 블록의 **숫자 ID**(정수). 블록 종류별로 다르게 처리하는 수단 — 전체 표는 Part VIII |
+| `position` | 이 픽셀이 세계의 어디에 있는지(x, y, z) |
+| `normal` | 면이 향하는 방향(위, 아래, 북…) 벡터 |
+| `skyLight` | 하늘빛이 이 블록에 얼마나 닿는지 0~1 이지만 **톤맵핑됨**: 열린 하늘 ≈ 1.0, 나무 아래에서 한 단계 낮아도 ≈ 0.995(7절) |
+| `blockLight` | 램프, 횃불, 용암의 빛… 색상으로(컬러 램프 존재) |
+| `heldLight` | 플레이어가 손에 든 아이템의 빛 |
+| `skyLightColour` | 현재 하늘의 색조(밤에는 어두운 파랑, 해질녘엔 따뜻함) |
+| `litColour` | 이 표면에 대한 엔진 자체의 조명 색(밑바탕으로 유용) |
+| `fogVisibility`, `fogColour` | 이 픽셀이 얼마나 안개져 있는지, 안개 색(안개가 꺼졌을 땐 **검은색**으로 옴 — 처리할 것) |
+
+사용할 수 있는 엔진 함수들:
+
+| 함수 | 얻는 것 |
+|---|---|
+| `bloxdDefaultSurface(in)` / `bloxdDefaultLight(surface, light)` | 엔진의 일반 결과 — 항상 출발점 |
+| `bloxdDefaultVertex(in)` | 바뀌지 않은 정점 결과 — vertex 훅의 시작점 |
+| `bloxdApplyFog(colour, light)` | 색상을 안개에 올바르게 섞음 |
+| `bloxdSunDirection()` | 태양 방향 단위 벡터； 지구형 태양이 없는 세계에서는 `(0,0,0)`； 달은 정확히 반대 방향 |
+| `bloxdTime()` | 초 — **3600초마다 0으로 돌아감**(`bloxdTimeWrap`). 7절 참조 |
+| `bloxdEyePosition()` | 카메라 위치(거리 효과용) |
+| `bloxdOriginOffset()` | 엔진은 주기적으로 세계 좌표를 다시 맞춥니다； 세계 위치 패턴에는 이 오프셋을 더하세요, 아니면 패턴이 눈에 띄게 튑니다 |
+| `bloxdFaceBlock(position, normal)` | 그리고 있는 면의 블록 셀(정수 좌표) — 블록별 무작위 변화에 최적 |
+| `bloxdOpaqueBehind()` | `BLOXD_SCENE_DEPTH` 아래 액체 surface/light만: 바로 이 픽셀 뒤의 `{found, position, distance}`; 두께 = `distance` − 눈→표면 |
+
+## 7. 모두가 빠지는 함정
+
+**시간이 감깁니다.** `bloxdTime()`은 초를 세지만 3600에서 다시 시작합니다. 날것 시간으로 애니메이션하면
+시간당 한 번씩 튀게 됩니다. 항상 랩 안에서 정수 주기로 애니메이션하세요:
+
+```wgsl
+sin(6.2831853 * fract(bloxdTime() / bloxdTimeWrap * cycles + phase))
+```
+
+`cycles`를 정수로 선택하세요. 그러면 3600초 값이 0초 값과 같아져서 절대로 튀지 않습니다.
+
+**skyLight는 톤맵핑되어 있습니다.** 선형 0~1 밝기가 아닙니다. 엔진은 0~15 빛 단계를 곡선에 압축합니다:
+열린 하늘 ≈ 1.0, 한 단계 낮아도 ≈ 0.995입니다. "그늘"로 `skyLight < 0.5` 를 시험하면 거의 아무것도
+안 맞습니다. 실제 곡선으로 기준을 조정하세요(Part IV에 측정값).
+
+**안개는 항상 있습니다.** 보이지 않아도 엔진은 안개를 계산합니다(때로 멀리 밀려 있음). Light 훅이
+`bloxdApplyFog` 없이 색상을 돌려주면 먼 지형이 너무 밝게 안개를 뚫습니다. 색 작업 뒤 마지막에 안개를
+적용하세요.
+
+**Unlit은 필드를 없애지 않습니다.** 헤더는 중립값을 줍니다: `skyLight=1`, `blockLight=0`, `heldLight=0`, `directional=0`, 흰 빛 색. unlit에서 하늘 로직이 꺼져야 하면 `#ifdef BLOXD_LIGHTING`으로 막으세요.
+
+## 8. 팩이 할 수 있는 모든 것
+
+- 블록, 물, 용암의 색상을 바꾸기 — 전체로든 `blockId` 별로든.
+- 발광시키기(표면 훅의 `out.emission`): 용암, 광석, 램프…
+- 시간에 따른 색상·알파 애니메이션(맥동, 흐르는 용암, 빛나는 물) — 랩 안전(7절).
+- `bloxdSunDirection()`와 `skyLightColour`로 낮/밤 주기 반응(따뜻한 노을, 푸른 달빛).
+- 세계 고정 절차적 디테일: `bloxdFaceBlock` 해시로 블록별 미묘한 변화, 거리 안개 색조, `bloxdOpaqueBehind()` 깊이로 수중 어두워짐.
+- 프래그먼트별 전체 그레이딩: 명암, 채도, 따뜻/찬 균형 — 끝에 안개를 적용한다는 전제.
+- 표면에 효과 그리기: 광석 반짝임, 수면 근처의 "젖은 듯한" 어두워짐, 위쪽 면 눈(`normal.y`) 등 — 전부 프래그먼트 자체 데이터로 계산.
+- 거리(`bloxdEyePosition()`)로 비싼 효과 흐리기(값싼 디테일 단계).
+
+## 9. 팩이 할 수 없는 것 (엔진의 한계)
+
+- **식물, 풀, 꽃**은 팩이 닿을 수 없는 엔진 부분이 그립니다. 색을 바꾸거나 애니메이션할 수 없습니다.
+- **후처리 없음.** 완성 프레임 접근 없음, 화면 좌표 없음, 블러/블룸/비네트 패스 없음.
+- **장면 깊이 없음.** 유일한 "뒤에 뭐가 있나"는 액체 너머의 `bloxdOpaqueBehind()`뿐입니다.
+- **진짜 섀도우맵이나 앰비언트 오클루전 없음**(엔진 빛값이 이미 담은 것 이상은).
+- **새 객체나 입자 없음.** 이미 있는 표면에만 그릴 수 있습니다(영리한 팩은 표면에 오버레이를 그립니다 —
+  레시피 참조 — 하지만 지오메트리는 언제나 엔진의 것입니다).
+- **자신의 텍스처나 샘플러 없음**, 추가 데이터 공급 없음: 입력은 훅 인자와 엔진 함수뿐입니다.
+- **정점 이동은 정책에 달렸습니다.** vertex 훅은 실제로 있지만 allow 게임에서만 돌고, 기본 strict는 그 프로그램을 끕니다. 핵심 룩이나 가독성을 움직인 모서리에 의존시키지 마세요.
+- **하늘 그 자체**(태양 원반, 스카이박스, 구름)는 엔진이 그립니다. 팩은 하늘 "데이터"(방향·색조)만 받습니다.
+
+이 목록 중 무언가 필요한 효과라면 오늘 그 어떤 팩도 할 수 없습니다 — 입증된 엔진 거동이며 실력 문제가
+아닙니다.
+
+## 10. 다섯 단계로 첫 팩
+
+1. `pack.json` 만들기:
+
+```json
+{ "apiVersion": 2, "name": "나의 첫 팩", "author": "당신" }
+```
+
+2. 그 옆에 `shader.wgsl` 만들기:
+
+```wgsl
+fn bloxdTerrainSurface(surface: BloxdSurfaceIn) -> BloxdSurface {
+    var out = bloxdDefaultSurface(surface);
+    out.colour = out.colour * vec3f(1.05, 1.0, 0.92);
+    return out;
+}
+
+fn bloxdTerrainLight(surface: BloxdSurface, light: BloxdLightIn) -> BloxdLight {
+    var out = bloxdDefaultLight(surface, light);
+    _ = surface;
+    return out;
+}
+```
+
+이 팩은 모든 블록을 약간 더 따뜻하게 만들고(빨강 많게, 파랑 적게) 엔진 조명은 그대로 둡니다. `_ = surface;`
+줄은 컴파일러에게 "이 입력은 의도적으로 안 쓴다"고 알립니다 — WGSL이 요구하는 형태입니다.
+
+3. 폴더 임포트용으로 파일들을 한 폴더에 두거나 zip으로 묶으세요. 가장 명확한 형태는 최상위에서 `pack.json`을 WGSL 옆에 두는 것입니다. 모두가 공유하는 wrapper 폴더 하나도 허용되고 제거됩니다.
+
+4. 게임에서: 설정 → 그래픽 → **Use New WebGPU Renderer** 켜기 → Shader Pack → 폴더 또는 `.zip` 선택 → Apply → **페이지 새로고침**.
+
+5. 둘러보세요: 세계가 좀 더 따뜻해졌을 겁니다. 세 숫자를 바꿔 다시 로드하며 실험하세요.
+
+그런 뒤 한 걸음씩 키우세요: 효과는 한 번에 하나만, 다음을 넣기 전 낮·노을·밤·물속·동굴에서 확인하세요.
+
+## 11. 아홉 개의 엄격한 규칙
+
+이 중 하나라도 어기면 팩이 깨지거나 거부됩니다:
+
+1. `BLOXD_*`나 여섯 훅 외의 `bloxd*` 이름을 정의하지 마세요. 전처리 지시문은 줄 시작의 `#define/#ifdef/#ifndef/#else/#endif`만 됩니다. `#define`은 값 없는 전역 플래그이며 조건문 안에 둘 수 없습니다.
+
+2. `BloxdVertex` / `BloxdSurface` / `BloxdLight`를 직접 만들지 말고 `bloxdDefaultVertex` / `bloxdDefaultSurface` / `bloxdDefaultLight`에서 시작하세요.
+
+3. WGSL에서 `mod`는 예약어입니다 — `%`를 쓰세요.
+4. `@…` 속성, 엔트리 포인트, 텍스처, 샘플러, `override/enable/requires/diagnostic`, 추가 스토리지 클래스, 이중 밑줄 식별자, 화면 UV 금지.
+
+5. vertex 훅이나 도달 가능한 `discard`는 팩 거부 대신 strict(기본)에서 그 프로그램을 끕니다. strict 안전을 원하면 피하거나 효과를 막으세요.
+
+6. `out.alpha`는 `BLOXD_ALPHA` 아래에서만 있습니다(terrain+strict에서만 없음). 액체 alpha는 모든 변형에 있고 지형 alpha는 가드가 필요합니다.
+
+7. 쓰지 않는 입력은 `_ = value;` 로 — `let _ =` 형태는 거부됩니다.
+8. 정확한 상한: 매니페스트 ≤65,536 bytes; WGSL 1–256개; WGSL 총합 ≤262,144 bytes; zip ≤33,554,432 bytes 및 ≤1,024 항목.
+
+9. 엔진은 **8개 변형**을 만듭니다: allow/strict × lit/unlit × terrain/liquid. Define: `BLOXD_STRICT`, `BLOXD_LIGHTING`, `BLOXD_SCENE_DEPTH`(액체만), `BLOXD_ALPHA`(terrain+strict에서만 없음). 모두에서 컴파일과 동작이 필요합니다. Tint를 위해 bitwise/shift를 괄호로 감싸세요.
+
+## 12. 미니 용어집
+
+| 용어 | 뜻 |
+|---|---|
+| 프레임 | 화면 그림 한 장 |
+| 픽셀 / 프래그먼트 | 그림의 한 점 / 색이 입혀지는 픽셀 후보 |
+| 정점 | 삼각형의 모서리 |
+| 메시 | 청크의 보이는 면들로 만든 삼각형 껍질 |
+| 아틀라스(텍스처 아틀라스) | 모든 블록 텍스처가 든 한 장의 큰 그림 |
+| UV | 면이 아틀라스의 어느 부분을 쓰는지 지시하는 좌표 |
+| WGSL | WebGPU의 셰이더 언어 — Bloxd 팩의 언어 |
+| 훅 | 팩이 정의할 수 있는 여섯 엔진 함수 중 하나(vertex/surface/light × terrain/liquid) |
+| skyLight / blockLight | 하늘의 빛 / 블록의 빛(램프, 용암) |
+| 랩(3600초) | `bloxdTime()` 이 매시간 0으로 돌아가는 것 |
+| 안개 | 먼 지형이 안개색에 녹아드는 것 |
+| 변형(variant) | 엔진이 팩을 컴파일하는 8가지 방법 |
+
+## 13. API v2 정확한 참조
+
+이 절이 현재 정확한 참조입니다. 짧은 요약이 더 단순하게 들려도 이 규칙이 이깁니다. API v2만 다룹니다. 미래 API 버전은 새로 검증해야 합니다.
+
+- **임포트:** 정규화 뒤 매니페스트 정확히 하나; `apiVersion` 숫자 2; 매니페스트 ≤65,536 bytes; `.wgsl` 1–256 경로순, 총합 ≤262,144 bytes; zip ≤33,554,432 bytes/1,024 항목, stored/deflate만.
+- **변형/define:** allow/strict × lit/unlit × terrain/liquid. `BLOXD_SCENE_DEPTH` 액체만; `BLOXD_ALPHA` terrain+strict에서만 없음.
+- **Strict/unlit:** strict 기본; vertex/discard는 거부 대신 strict를 끔; unlit은 `skyLight=1`, block/held/directional 0, 흰색을 줌.
+- **가드:** 지형 alpha는 `BLOXD_ALPHA` 아래; 깊이는 `BLOXD_SCENE_DEPTH` 아래 액체 surface/light만; vertex에서 `bloxdOpaqueBehind()`는 오류.
+- **액체 깊이:** 지형 투명체 전의 스냅샷, 정확한 픽셀, 뒤 색 없음, 자기 액체/나중 투명체 안 보임; 광학 두께 = `behind.distance − distance(eye, surface.position)`.
+- **런타임:** Lite WebGPU 필요; WebGL 폴백 = 팩 없음; 변경은 새로고침 뒤 적용; `bloxdTime()=performance.now()/1000 mod 3600`; skyLight 곡선 `1−(1−x/(3−2x))³`, `x=level/15`.
+
+## 14. 더 깊이 들어가기 (영어 챕터)
+
+| 부 | 파일 | 내용 |
+|---|---|---|
+| I | [01-making](GUIDE-EN.md#part-i--making-a-pack) | 팩 형식, 다중 파일, 한도, 배포 |
+| II | [02-api](GUIDE-EN.md#part-ii--the-api-contract) | 훅과 struct의 완전한 계약 |
+| III | [03-recipes](GUIDE-EN.md#part-iii--recipes) | WGSL 코드 포함 프로덕션 레시피 12개 |
+| IV | [04-realism](GUIDE-EN.md#part-iv--measured-numbers-realism-that-survives-contact-with-the-game) | 측정값: 빛 단위, 안개, 물 광학 |
+| V | [05-troubleshooting](GUIDE-EN.md#part-v--troubleshooting) | 알려진 모든 실패와 해결법 |
+| VI | [06-implementation](GUIDE-EN.md#part-vi--implementation--local-validation) | 8 변형 전부 로컬 검증, 패키싱 체크 |
+| VII | [07-internals](GUIDE-EN.md#part-vii--engine-internals) | 엔진 내부(시간, 빛 파이프라인, 하늘, 로더) |
+| VIII | [08-block-ids](GUIDE-EN.md#part-viii--the-numeric-block-id-table) | 숫자 블록 ID 전체 표 |
+| IX | [09-sources](GUIDE-EN.md#part-ix--where-this-knowledge-comes-from-and-what-we-dont-know) | 이 가이드의 모든 사실이 어떻게 증명됐는지 |
+| X | [10-constants](GUIDE-EN.md#part-x--the-constants-register-en) | 역할 설명과 함께 모든 상수(551) |
+
+프랑스어 완성판: [fr](GUIDE-FR.md) · 모든 언어: [목차](README.md). 라이선스: MIT.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Generates Part X inside guides/GUIDE-EN.md and guides/GUIDE-FR.md (spliced between markers)
+# Generates Part X inside GUIDE-EN.md and GUIDE-FR.md (spliced between markers)
 # from the ACTUAL sources in this repository (grep, not memory).
 # Every constant appears with its exact value; roles come from curated
 # dictionaries (individual or by prefix family).
@@ -7,7 +7,6 @@ import re, io, os
 from collections import OrderedDict
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
-GUIDES = os.path.join(os.path.dirname(__file__), "guides")
 SOURCES = [
     ("cinematic-v5", os.path.join(ROOT, "cinematic-v5", "pack", "shader.wgsl")),
     ("titan", os.path.join(ROOT, "handoff-round-14", "pack", "shader.wgsl")),
@@ -339,25 +338,37 @@ ENGINE_EN = """## Engine-exposed variables (what the game gives you)
 
 | Variable | Type / value | Meaning |
 |---|---|---|
-| `surface.colour` | vec3f | incoming material colour (pre-shading) |
-| `surface.alpha` | f32 | incoming alpha; drives cutout discard & liquid blend |
-| `surface.position` | vec3f | world position of the fragment |
+| `vertex.position` | vec3f | incoming world position of the corner (vertex hooks) |
+| `vertex.normal` | vec3f | face normal at the corner |
+| `vertex.blockId` | u32 | numeric block id at the corner |
+| `outVertex.position` | vec3f | returned world position; replaces the corner before projection/fog distance |
+| `surface.colour` | vec3f | incoming material colour after texture × vertex colour |
+| `surface.alpha` | f32 | incoming alpha |
 | `surface.normal` | vec3f | face normal |
+| `surface.position` | vec3f | world position of the fragment |
 | `surface.blockId` | u32 | numeric block id (Part VIII) |
+| `out.alpha` | f32 | output alpha; field exists only under `BLOXD_ALPHA` (absent solely in terrain+strict) |
 | `out.emission` | vec3f | self-glow, surface hook only |
-| `light.skyLight` | f32 0..1 | sky light, **tone-mapped** (open sky ≈1, one lost canopy level ≈0.995) |
-| `light.blockLight` | vec3f | block light colour (35% channel floor) |
-| `light.heldLight` | vec3f | handheld light (≤15 blocks, dist^0.75) |
-| `light.skyLightColour` | vec3f | sky tint; darkens at night |
 | `light.litColour` | vec3f | surface's own lit colour |
-| `light.fogVisibility` | f32 | engine fog factor (linear band 32×D per 3rd-party) |
+| `light.engineColour` | vec3f | engine-combined colour used by the default light result before pack emission/fog handling |
+| `light.directional` | f32 | directional-light scalar behind the engine result |
+| `light.ambient` | vec3f | ambient term behind the engine result |
+| `light.blockLight` | vec3f | block light colour (35% channel floor) |
+| `light.skyLight` | f32 0..1 | exact curve `1 − (1 − x/(3 − 2x))³`, `x=level/15` (level 14≈0.9945) |
+| `light.ambientLightColour` | vec3f | ambient light tint |
+| `light.skyLightColour` | vec3f | sky tint; darkens at night |
+| `light.heldLight` | vec3f | handheld light (conical, distance warped ^0.75) |
 | `light.fogColour` | vec3f | fog colour; **black when fog mode is NONE** |
+| `light.fogVisibility` | f32 | engine fog factor |
+| `light.position` | vec3f | world position in the light hook |
+| `light.normal` | vec3f | face normal in the light hook |
 | `light.blockId` | u32 | numeric block id in the light hook |
-| `bloxdTimeWrap` | f32 = **3600** | the wrap period of `bloxdTime()` (seconds) |
+| `bloxdTimeWrap` | f32 = **3600** | wrap period of `bloxdTime()` (seconds) |
+| `bloxdDefaultVertex(in)` | BloxdVertex | unchanged vertex result — mandatory starting point for vertex hooks |
 | `bloxdOriginOffset()` | vec3i | floating-origin rebase; inject into world hashes |
 | `bloxdSunDirection()` | vec3f | unit sun vector; zero on sunless skies; moon = −this |
 | `bloxdFaceBlock(p,n)` | vec3i | cell (block coordinates) of the current face — per-block hash input; the id itself is `surface.blockId` / `light.blockId` |
-| `bloxdOpaqueBehind()` | {found,position} | first opaque block behind a liquid fragment |
+| `bloxdOpaqueBehind()` | {found,position,distance} | liquid-only opaque point behind the exact pixel; `distance` is eye→behind |
 | `bloxdEyePosition()` | vec3f | camera position |
 | `bloxdApplyFog(c,l)` | vec3f | mix(fogColour, c, fogVisibility) |
 
@@ -365,32 +376,40 @@ ENGINE_EN = """## Engine-exposed variables (what the game gives you)
 
 | Figure | Value | Provenance |
 |---|---|---|
-| time wrap | 3600 s | [3rd-party + shipped usage] |
-| light scale | 0–15, open sky = 15 | [3rd-party + measured] |
-| tone curve family | ≈ 45·b/(1+2b) (saturating) | [measured] |
-| terrain shadow band | skyLight 13.6–14.95 / 15 | [measured] |
-| packed-light channel floor | 35 % of max channel | [3rd-party] |
+| time source | `performance.now()/1000 mod 3600` | [client] |
+| light scale | integer levels 0–15, open sky = 15 | [client + measured] |
+| skyLight curve | `x=level/15`; `1 − (1 − x/(3 − 2x))³`; level 14 = 0.9945 | [client] |
+| packed-light channel floor | 35 % of max channel | [client] |
+| pack defines | `BLOXD_STRICT`; `BLOXD_LIGHTING`; `BLOXD_SCENE_DEPTH` liquid-only; `BLOXD_ALPHA` absent only terrain+strict | [client] |
+| manifest cap | 65,536 bytes after decompression; `apiVersion` exactly number 2 | [client] |
+| WGSL caps | 1–256 files; 262,144 bytes total after decompression | [client] |
+| zip caps | 33,554,432 bytes; 1,024 entries; stored/deflate only | [client] |
+| stored validation errors | 100 plus overflow count | [client] |
 | fog band | start 32×D, end 32×(D+1) (linear per 3rd-party; EXP2 legacy note — open question) | [3rd-party] |
 | default fog colour | rgb(183, 191, 195) | [3rd-party] |
 | showFog off | band pushed to 3200–3328 | [3rd-party] |
 | scene ambient default | 0.5 (user setting) | [3rd-party] |
-| loader cap | 256 KB total .wgsl | [3rd-party] |
-| scene directional lamps | 2, fixed direction/intensity | [3rd-party] |
+| Lite directional lights | up to 4 compiled directional lights; per-vertex Lambert sum | [client] |
 """
 ENGINE_FR = ENGINE_EN  # tables keep English identifiers; intro FR
 ENGINE_FR_INTRO = """## Variables exposées par le moteur (ce que le jeu te donne)
 
 Les identifiants restent en anglais (ce sont les noms réels du code). Signification en contexte
-FR dans la Partie II. Valeurs internes clés : wrap temps **3600 s** ; échelle lumière **0-15**,
-ciel ouvert = 15 ; courbe de tone ≈ **45·b/(1+2b)** [mesuré] ; bande d'ombre terrain
-**13.6-14.95/15** [mesuré] ; plancher des canaux packés **35 %** ; bande de fog **32×D →
-32×(D+1)** [tierce, question ouverte] ; couleur fog défaut **rgb(183,191,195)** ; showFog off →
-**3200-3328** ; ambient scène défaut **0.5** ; cap loader **256 Ko** ; 2 lampes directionnelles
-figées. Détails et provenances : [Partie IV](#partie-iv--nombres-mesurés-fr) et Partie VII.
+FR dans la Partie II. Valeurs internes clés : temps = **performance.now()/1000 mod 3600** ;
+échelle lumière **0-15**, ciel ouvert = 15 ; courbe skyLight exacte
+**1 − (1 − x/(3 − 2x))³** avec `x=niveau/15` (niveau 14 ≈ **0,9945**) [client] ; plancher des
+canaux packés **35 %** [client] ; defines pack **BLOXD_STRICT**, **BLOXD_LIGHTING**,
+**BLOXD_SCENE_DEPTH** (liquide seulement), **BLOXD_ALPHA** (absent seulement en terrain+strict)
+[client] ; caps importeur : manifeste **65 536 octets**, **1–256** fichiers WGSL totalisant
+**262 144 octets**, zip **33 554 432 octets**/**1 024 entrées** en stocké/deflate seulement
+[client] ; bande de fog **32×D → 32×(D+1)** [tierce, question ouverte] ; couleur fog défaut
+**rgb(183,191,195)** ; showFog off → **3200-3328** ; ambient scène défaut **0.5** ; jusqu'à
+**4** lumières directionnelles compilées côté Lite [client]. Détails et provenances :
+[Partie IV](#partie-iv--nombres-mesurés-fr) et Partie VII.
 
 ## Registre des constantes (packs locaux et packs disséqués)
 
-Généré mécaniquement depuis les sources de ce dépôt (`zz-gen_var_registry.py`) —
+Généré mécaniquement depuis les sources de ce dépôt (`zz.py`) —
 valeur exacte du code, rôle par constante (individuel ou par famille), pack d'origine.
 """
 
@@ -406,7 +425,7 @@ def table(pack_items, lang):
         out.append("| `%s` | %s | %s |" % (name, v, r))
     return "\n".join(out), missing
 
-C_START = "<!-- CONSTANTS:START — generated by zz-gen_var_registry.py, do not edit by hand -->"
+C_START = "<!-- CONSTANTS:START — generated by zz.py, do not edit by hand -->"
 C_END = "<!-- CONSTANTS:END -->"
 def splice(path, body):
     doc = io.open(path, encoding="utf-8").read()
@@ -437,7 +456,7 @@ def main():
             if missing:
                 report.append("  unmatched: " + ", ".join(missing))
         body = "\n".join(parts) + "\n"
-        splice(os.path.join(GUIDES, guide_file), body)
+        splice(os.path.join(os.path.dirname(__file__), guide_file), body)
     print("TOTAL consts:", total)
     print("\n".join(report))
 

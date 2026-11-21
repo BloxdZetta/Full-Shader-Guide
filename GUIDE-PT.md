@@ -5,7 +5,9 @@
 **Leia isto primeiro.** Nenhuma experiência necessária. Em dez minutos, você saberá como o jogo
 desenha sua imagem, o que é um shader e exatamente o que um shader pack pode e não pode fazer.
 
-> **Escopo: API v2.** Este guia descreve `apiVersion: 2` e o caminho atual WebGPU/Lite. Não mude `apiVersion` de forma especulativa para uma versão futura.
+> **Escopo: API v2.** Este guia descreve `apiVersion: 2` e o caminho WebGPU/Lite daquela época. Não mude `apiVersion` de forma especulativa para uma versão futura.
+
+> **Atualização de 21 de novembro de 2026:** A pesquisa recente aponta a API v5 como alvo atual; este guia continua sendo uma referência histórica da API v2. Para novos pacotes, consulte a [nota da API v5 em francês](GUIDE-API-V5-FR.md).
 
 ## 1. A versão de um minuto
 

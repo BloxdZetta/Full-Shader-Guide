@@ -5,7 +5,9 @@
 **Przeczytaj to najpierw.** Doświadczenie nie jest potrzebne. Za dziesięć minut będziesz wiedzieć,
 jak gra rysuje obraz, czym jest shader i dokładnie, co shader pack może, a czego nie może.
 
-> **Zakres: API v2.** Ten przewodnik opisuje `apiVersion: 2` i bieżącą ścieżkę WebGPU/Lite. Nie zmieniaj `apiVersion` spekulacyjnie pod przyszłą wersję.
+> **Zakres: API v2.** Ten przewodnik opisuje `apiVersion: 2` i ówczesną ścieżkę WebGPU/Lite. Nie zmieniaj `apiVersion` spekulacyjnie pod przyszłą wersję.
+
+> **Aktualizacja z 21 listopada 2026 r.:** Najnowsze badania wskazują API v5 jako bieżący cel; ten przewodnik pozostaje historyczną referencją API v2. Przy nowych paczkach skorzystaj z [francuskiej notatki o API v5](GUIDE-API-V5-FR.md).
 
 ## 1. Wersja jednominutowa
 

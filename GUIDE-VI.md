@@ -5,7 +5,9 @@
 **Đọc cái này trước.** Không cần kinh nghiệm. Trong mười phút bạn sẽ biết game vẽ hình như thế nào,
 shader là gì, và chính xác shader pack làm được gì và không làm được gì.
 
-> **Phạm vi: API v2.** Hướng dẫn này mô tả `apiVersion: 2` và đường WebGPU/Lite hiện tại. Đừng đổi `apiVersion` theo suy đoán cho phiên bản tương lai.
+> **Phạm vi: API v2.** Hướng dẫn này mô tả `apiVersion: 2` và đường WebGPU/Lite thời kỳ đó. Đừng đổi `apiVersion` theo suy đoán cho phiên bản tương lai.
+
+> **Cập nhật ngày 21 tháng 11 năm 2026:** Nghiên cứu mới cho biết API v5 là mục tiêu hiện tại; hướng dẫn này vẫn là tài liệu tham khảo lịch sử cho API v2. Với gói mới, xem [ghi chú API v5 bằng tiếng Pháp](GUIDE-API-V5-FR.md).
 
 ## 1. Bản một phút
 

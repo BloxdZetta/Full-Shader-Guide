@@ -1,13 +1,10 @@
-# Bloxd Shader Packs — Le Guide Complet (Français)
+# Bloxd Shader Packs — Manuel détaillé historique (API v2)
 
-🌐 [Toutes les langues](README.md) · [English](GUIDE-EN.md)
+🌐 [Toutes les langues](README.md) · [English](GUIDE-EN.md) · [Recherche API v5](GUIDE-API-V5-FR.md)
 
-**Tout ce qu'on sait sur les shader packs Bloxd.io, expliqué le plus simplement
-possible :** comment le rendu web dessine l'image, comment les shaders fonctionnent,
-ce qu'un pack peut faire, ce qu'il ne peut pas faire, et comment en construire un —
-fondé sur des données moteur mesurées, une table numérique complète des ids de
-blocs, des packs de la communauté disséqués, et une validation locale dans les 8
-variantes du moteur.
+Ce manuel conserve une référence approfondie de l’époque de l’API v2 : rendu web,
+recettes WGSL, valeurs mesurées, table historique d’IDs de blocs et notes de validation v2.
+Ses exemples et observations propres à cette version ne constituent pas une référence actuelle.
 
 **Un seul fichier, tout est dedans.** Utilisez le sommaire ci-dessous — ou le plan (bouton ≡) de GitHub — pour aller droit à une partie.
 
@@ -25,7 +22,7 @@ variantes du moteur.
 - [Partie IX — D'où vient cette connaissance (et ce qu'on ne sait pas) (FR)](#partie-ix--doù-vient-cette-connaissance-et-ce-quon-ne-sait-pas-fr)
 - [Part X — The constants register (FR)](#part-x--the-constants-register-fr)
 
-> **Portée : API shader-pack v2.** Cette édition décrit les packs dont le manifeste dit `apiVersion: 2`, exécutés par le chemin terrain WebGPU/Lite actuel. Une future version d'API reste un nouveau contrat tant que l'importeur et le renderer ne l'acceptent pas réellement : ne change jamais `apiVersion` par anticipation, et isole le code dépendant de la version pour qu'une migration touche une petite surface.
+> **Portée historique : API shader-pack v2.** La recherche documentaire du 21 novembre 2026 indique v5 comme cible actuelle et rapporte que le jeu courant rejette les packs v1–v4. Pour créer un nouveau pack, commencez par [la fiche API v5](GUIDE-API-V5-FR.md). Ne modifiez pas seulement `apiVersion` : portez le contrat WGSL puis testez-le dans le client WebGPU actuel. Les affirmations v2 qui suivent sont conservées comme référence datée et ne sont pas re-certifiées comme comportement courant.
 
 
 ---

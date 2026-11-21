@@ -5,7 +5,9 @@
 **Önce bunu oku.** Deneyim gerekmez. On dakikada oyunun görüntüyü nasıl çizdiğini, shader'ın ne
 olduğunu ve bir shader pack'in tam olarak ne yapıp ne yapamayacağını öğreneceksin.
 
-> **Kapsam: API v2.** Bu kılavuz `apiVersion: 2` ve güncel WebGPU/Lite yolunu anlatır. Gelecek sürüm için `apiVersion`ı spekülatif değiştirme.
+> **Kapsam: API v2.** Bu kılavuz `apiVersion: 2` ve o dönemdeki WebGPU/Lite yolunu anlatır. Gelecek sürüm için `apiVersion`ı spekülatif değiştirme.
+
+> **21 Kasım 2026 güncellemesi:** Yeni araştırmalar mevcut hedefin API v5 olduğunu gösteriyor; bu kılavuz API v2 için tarihî bir kaynaktır. Yeni paketler için [Fransızca API v5 notuna](GUIDE-API-V5-FR.md) bakın.
 
 ## 1. Bir dakikalık özet
 

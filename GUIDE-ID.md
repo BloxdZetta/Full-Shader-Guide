@@ -5,7 +5,9 @@
 **Baca ini dulu.** Tidak perlu pengalaman. Dalam sepuluh menit kamu akan tahu bagaimana game
 menggambar gambar, apa itu shader, dan apa saja yang bisa dan tidak bisa dilakukan shader pack.
 
-> **Cakupan: API v2.** Panduan ini menjelaskan `apiVersion: 2` dan jalur WebGPU/Lite saat ini. Jangan ubah `apiVersion` secara spekulatif untuk versi mendatang.
+> **Cakupan: API v2.** Panduan ini menjelaskan `apiVersion: 2` dan jalur WebGPU/Lite pada masa itu. Jangan ubah `apiVersion` secara spekulatif untuk versi mendatang.
+
+> **Pembaruan 21 November 2026:** Riset terbaru menyebut API v5 sebagai target saat ini; panduan ini tetap merupakan referensi historis API v2. Untuk pack baru, lihat [catatan API v5 berbahasa Prancis](GUIDE-API-V5-FR.md).
 
 ## 1. Versi satu menit
 

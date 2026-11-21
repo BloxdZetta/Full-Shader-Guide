@@ -5,7 +5,9 @@
 **इसे पहले पढ़ें।** कोई अनुभव ज़रूरी नहीं। दस मिनट में आप जानेंगे कि खेल अपनी तस्वीर कैसे बनाता है,
 shader क्या है, और shader pack क्या कर सकता है और क्या नहीं।
 
-> **Scope: API v2.** यह guide `apiVersion: 2` और current WebGPU/Lite path बताता है। Future version हेतु `apiVersion` speculative न बदलें।
+> **Scope: API v2.** यह guide `apiVersion: 2` और उस समय के WebGPU/Lite path बताता है। Future version हेतु `apiVersion` speculative न बदलें।
+
+> **21 नवंबर 2026 अपडेट:** हालिया शोध API v5 को वर्तमान लक्ष्य बताता है; यह गाइड API v2 का ऐतिहासिक संदर्भ है। नए packs के लिए [फ़्रेंच API v5 नोट](GUIDE-API-V5-FR.md) देखें।
 
 ## 1. एक मिनट वाला संस्करण
 

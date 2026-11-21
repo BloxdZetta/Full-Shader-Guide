@@ -1,16 +1,14 @@
-# Bloxd Shader Packs — The Complete Guide (English)
+# Bloxd Shader Packs — Deep Reference (Historical API v2)
 
-🌐 [All languages](README.md) · [Français](GUIDE-FR.md)
+🌐 [All languages](README.md) · [Français](GUIDE-FR.md) · [API v5 research note (FR)](GUIDE-API-V5-FR.md)
 
-**Everything known about Bloxd.io shader packs, explained as simply as possible:**
-how the web renderer draws the picture, how shaders work, what a pack can do,
-what it cannot do, and how to build one — backed by measured engine data,
-a full numeric block-id table, dissected community packs, and local validation
-in all 8 engine variants.
+This is the repository’s detailed **API v2-era** manual: web rendering, WGSL recipes,
+measured values, a historical block-ID table and v2 validation notes. Its version-specific
+examples and importer/runtime observations must not be read as a current API reference.
 
 **One file, everything inside.** Use the contents below — or GitHub's outline (the ≡ button) — to jump straight to a part.
 
-> **Scope: shader-pack API v2.** This edition describes packs whose manifest says `apiVersion: 2`, running through the current WebGPU/Lite terrain path. A future API version is a new contract until the importer and renderer actually accept it: never change `apiVersion` speculatively, and keep version-dependent code isolated so a migration touches a small surface.
+> **Historical scope: shader-pack API v2.** The research reviewed on 21 November 2026 reports API v5 as the current target and says the current game rejects v1–v4 packs. For new work, start with [GUIDE-API-V5-FR.md](GUIDE-API-V5-FR.md). Do not change `apiVersion` by itself: port the WGSL contract and test it in the current WebGPU client. The earlier v2 claims below are retained as a dated reference, not re-certified as current behavior.
 
 ## Contents
 

@@ -5,7 +5,9 @@
 **Lees dit eerst.** Geen ervaring nodig. In tien minuten weet je hoe het spel zijn beeld tekent, wat
 een shader is, en precies wat een shader pack wel en niet kan.
 
-> **Geldigheid: API v2.** Deze gids beschrijft `apiVersion: 2` en het huidige WebGPU/Lite-pad. Wijzig `apiVersion` niet speculatief voor een toekomstige versie.
+> **Geldigheid: API v2.** Deze gids beschrijft `apiVersion: 2` en het WebGPU/Lite-pad uit die periode. Wijzig `apiVersion` niet speculatief voor een toekomstige versie.
+
+> **Update van 21 november 2026:** Recent onderzoek noemt API v5 als huidige doelversie; deze gids blijft een historische API-v2-referentie. Bekijk voor nieuwe packs de [Franstalige API-v5-notitie](GUIDE-API-V5-FR.md).
 
 ## 1. De versie van één minuut
 
